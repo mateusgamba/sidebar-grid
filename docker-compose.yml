@@ -1,0 +1,11 @@
+version: "2"
+services:
+    sidebar-grid:
+        build:
+            context: ./client/
+        command: npm start
+        volumes:
+            - ./client/:/usr/app
+            - /usr/app/node_modules
+        ports:
+            - "3000:3000"
