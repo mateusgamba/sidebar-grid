@@ -7,6 +7,14 @@ import "gridstack/dist/gridstack.jQueryUI";
 import "gridstack/dist/gridstack.css";
 import "gridstack/dist/gridstack-extra.css";
 import ReactDOMServer from "react-dom/server";
+import dogImage from "./dog.jpg";
+
+const styleImgDiv = {
+    backgroundImage: `url(${dogImage})`,
+    backgroundSize: "100% 100%",
+    backgroundRepeat: "no-repeat",
+    objectFit: "cover"
+};
 
 export default class App extends Component {
     constructor() {
@@ -19,30 +27,30 @@ export default class App extends Component {
                 width: 2,
                 height: 2,
                 id: "a",
-                name: "Drag a"
+                name: "Item a"
             },
             {
                 x: 2,
-                y: 4,
+                y: 0,
                 width: 2,
                 height: 2,
                 id: "b",
-                name: "Drag b"
+                name: "Item b"
             }
         ];
 
         let itemsSidebar = [
             {
                 id: "c",
-                name: "Drag c"
+                name: "Item c"
             },
             {
                 id: "d",
-                name: "Drag d"
+                name: "Item d"
             },
             {
                 id: "e",
-                name: "Drag e"
+                name: "Item e"
             }
         ];
 
@@ -54,9 +62,11 @@ export default class App extends Component {
         }
 
         this.state = {
-            itemsGrid: itemsGrid,
-            itemsSidebar: itemsSidebar
+            itemsGrid,
+            itemsSidebar
         };
+
+        this.onAddSidebar = this.onAddSidebar.bind(this);
     }
 
     // Load grid items
@@ -78,13 +88,12 @@ export default class App extends Component {
             const grid = this.$gridReact.data("gridstack");
             grid.makeWidget(document.getElementById(item.id));
         }, this.$gridReact);
-        // console.log("loadGrid");
     }
 
     // Load sidebar items
     loadSidebar() {
         // Load state
-        const itemsSidebar = this.state.itemsSidebar;
+        const itemsSidebar = [...this.state.itemsSidebar];
         const items = itemsSidebar.map(item => {
             return ReactDOMServer.renderToStaticMarkup(
                 <ItemGrid
@@ -104,7 +113,6 @@ export default class App extends Component {
         this.$sidebarReact.prepend(items);
         // Re-load sidebar functionalities
         this.dragSidebar();
-        // console.log("loadSidebar");
     }
 
     // event drag drop from sidebar to grid
@@ -151,7 +159,6 @@ export default class App extends Component {
             ".deleteItemSidebar",
             this.onDeleteItemSidebar.bind(this)
         );
-        // console.log("componentDidMount");
     }
 
     componentWillUnmount() {
@@ -168,19 +175,14 @@ export default class App extends Component {
             ".deleteItemSidebar",
             this.onDeleteItemSidebar.bind(this)
         );
-        // console.log("componentWillUnmount");
     }
 
     // catch the change
     onChange(e, items) {
-        // console.log("onChange", items);
-        // console.log("event", e);
-
         if (items === undefined) {
             return false;
         }
 
-        // console.log("event", e);
         items.forEach(item => {
             this.updateItemGrid(item);
         });
@@ -198,13 +200,12 @@ export default class App extends Component {
         itemsGrid[index].height = item.height;
 
         this.setState({ itemsGrid });
-        // console.log("itemsGrid", itemsGrid);
-        this.saveStorage(this.state, "updateItemGrid");
+
+        this.saveStorage();
     }
 
     // From sidebar to grid
     onAddGridFromSidebar(e, items) {
-        // console.log("onAddGridFromSidebar");
         const id = items[0].el[0].id;
         const itemsSidebar = [...this.state.itemsSidebar];
 
@@ -216,13 +217,17 @@ export default class App extends Component {
             itemsSidebar,
             itemsGrid: [...prevState.itemsGrid, itemGrid]
         }));
-
-        this.saveStorage(this.state);
     }
 
     // From grid to sidebar
     onRemoveItemGrid(e) {
         const id = e.target.parentElement.parentElement.parentElement.id;
+
+        // Remove item from grid by dom
+        const el = document.getElementById(id);
+        this.$gridReact.data("gridstack").removeWidget(el);
+
+        // Update state
         const itemsGrid = this.state.itemsGrid;
 
         const index = itemsGrid.map(item => item.id).indexOf(id);
@@ -233,51 +238,38 @@ export default class App extends Component {
             itemsSidebar: [...prevState.itemsSidebar, itemsSidebar],
             itemsGrid
         }));
-
-        // Remove item from grid by dom
-        const el = document.getElementById(id);
-        this.$gridReact.data("gridstack").removeWidget(el);
-
-        // Re-load sidebar
-        this.loadSidebar();
-        this.saveStorage(this.state);
-        // console.log("onRemoveItemGrid");
     }
 
     onDeleteItemSidebar(e) {
         const id = e.target.parentElement.parentElement.parentElement.id;
-        const itemsSidebar = this.state.itemsSidebar;
+        const itemsSidebar = [...this.state.itemsSidebar];
 
         const index = itemsSidebar.map(item => item.id).indexOf(id);
         itemsSidebar.splice(index, 1);
 
         this.setState({ itemsSidebar });
-        this.loadSidebar();
-        this.saveStorage(this.state);
-        // console.log("onDeleteItemSidebar");
     }
 
-    addSidebar() {
+    onAddSidebar() {
         const id = this.charRandom();
+        const item = { id, name: `Drag ${id}` };
+        const itemsSidebar = [...this.state.itemsSidebar, item];
+        this.setState({ itemsSidebar });
+    }
 
-        const itemsSidebar = { id, name: `Drag ${id}` };
+    shouldComponentUpdate(nextProps, nextState) {
+        if (
+            this.state.itemsSidebar.length !== nextState.itemsSidebar.length ||
+            this.state.itemsGrid.length !== nextState.itemsGrid.length
+        ) {
+            return true;
+        }
+        return false;
+    }
 
-        this.setState(prevState => ({
-            itemsSidebar: [...prevState.itemsSidebar, itemsSidebar]
-        }));
-
+    componentDidUpdate() {
         this.loadSidebar();
-
-        this.saveStorage(this.state);
-        // console.log("addSidebar");
-    }
-
-    listSidebar() {
-        console.log("Sidebar", this.state.itemsSidebar);
-    }
-
-    listGrid() {
-        console.log("Grid", this.state.itemsGrid);
+        this.saveStorage();
     }
 
     charRandom() {
@@ -292,12 +284,10 @@ export default class App extends Component {
             : {};
     }
 
-    saveStorage(value, origin) {
-        // console.log("value", value);
-        // console.log("origin", origin);
+    saveStorage() {
         const data = {
-            itemsSidebar: value.itemsSidebar,
-            itemsGrid: value.itemsGrid
+            itemsSidebar: this.state.itemsSidebar,
+            itemsGrid: this.state.itemsGrid
         };
         if (global.localStorage) {
             global.localStorage.setItem("photo-grid", JSON.stringify(data));
@@ -308,32 +298,17 @@ export default class App extends Component {
         return (
             <div>
                 <div className="container-fluid">
-                    <h1>Grids demo</h1>
+                    <h1 className="mb-4">Drag drop from sidebar</h1>
 
                     <div className="row">
-                        <div className="col-md-3">
+                        <div className="col-md-3 bg-light pt-3">
                             <button
                                 type="button"
-                                className="btn btn-primary"
-                                onClick={this.addSidebar.bind(this)}
+                                className="btn btn-primary btn-block"
+                                onClick={this.onAddSidebar}
                             >
-                                Add
+                                Add Item
                             </button>
-                            <button
-                                type="button"
-                                className="btn btn-primary"
-                                onClick={this.listSidebar.bind(this)}
-                            >
-                                List Sidebar
-                            </button>
-                            <button
-                                type="button"
-                                className="btn btn-primary"
-                                onClick={this.listGrid.bind(this)}
-                            >
-                                List Grid
-                            </button>
-
                             {/* Sidebar */}
                             <div
                                 className="sidebar"
@@ -348,7 +323,6 @@ export default class App extends Component {
                             {/* Grid */}
                             <div
                                 className="grid-stack grid-stack-12"
-                                style={{ minHeight: "250px" }}
                                 ref={gridReact => (this.gridReact = gridReact)}
                             />
                         </div>
@@ -376,7 +350,10 @@ class ItemGrid extends Component {
                 data-gs-max-height={this.props.maxHeight}
                 data-gs-auto-position="0"
             >
-                <div className="grid-stack-item-content ui-draggable-handle">
+                <div
+                    className="grid-stack-item-content ui-draggable-handle"
+                    style={styleImgDiv}
+                >
                     <p>
                         <a
                             href="javascript:void(0);"
