@@ -8,12 +8,20 @@ import "gridstack/dist/gridstack.css";
 import "gridstack/dist/gridstack-extra.css";
 import ReactDOMServer from "react-dom/server";
 import dogImage from "./dog.jpg";
+import livingImage from "./living-room.jpg";
 
 const styleImgDiv = {
     backgroundImage: `url(${dogImage})`,
     backgroundSize: "100% 100%",
     backgroundRepeat: "no-repeat",
     objectFit: "cover"
+};
+
+const fullImg = {
+    backgroundImage: `url(${livingImage})`,
+    backgroundPosition: "center",
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "cover"
 };
 
 export default class App extends Component {
@@ -319,7 +327,7 @@ export default class App extends Component {
                             />
                         </div>
 
-                        <div className="col-md-9">
+                        <div className="col-md-9" style={fullImg}>
                             {/* Grid */}
                             <div
                                 className="grid-stack grid-stack-12"

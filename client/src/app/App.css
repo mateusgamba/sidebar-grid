@@ -40,7 +40,6 @@
 }
 
 .grid-stack {
-    background-color: #eeeeee;
     background-image: linear-gradient(#e0e0e0 1px, transparent 1px),
         linear-gradient(90deg, #e0e0e0 1px, transparent 0px),
         linear-gradient(rgba(255, 255, 255, 0.3) 5px, transparent 100px),
