@@ -1,12 +1,41 @@
+html,
+body {
+    height: 100%;
+}
+
+#content {
+    flex: 1;
+}
+
+#content > .row {
+    height: 100%;
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        white-space: nowrap;
+    }
+}
+
+@media (min-width: 768px) {
+    .sidebar {
+        height: calc(100vh - 95px);
+
+        /* overflow-x: hidden; */
+        /* overflow-y: scroll; */
+    }
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(236, 240, 241);
+}
+
 .grid-stack-item-content {
     color: #2c3e50;
     text-align: center;
     background-color: #18bc9c;
-}
-
-.sidebar {
-    padding: 25px 0;
-    text-align: center;
 }
 
 .sidebar .grid-stack-item {
@@ -20,8 +49,13 @@
     cursor: default;
     display: inline-block;
     margin-bottom: 5px;
+    z-index: 1000;
 }
 
+.grid-stack-item {
+    z-index: 1000;
+    position: relative;
+}
 .sidebar .grid-stack-item .grid-stack-item-content {
     height: 100%;
     border: 1px solid white;
@@ -31,25 +65,40 @@
     line-height: normal;
 }
 
-.grid-stack .grid-stack-item .grid-stack-item-content .deleteItemSidebar {
-    display: none;
-}
-
 .sidebar .grid-stack-item .grid-stack-item-content .removeItemGrid {
     display: none;
 }
 
+.grid-stack .grid-stack-item .grid-stack-item-content .deleteItemSidebar {
+    display: none;
+}
+
 .grid-stack {
-    background-image: linear-gradient(#e0e0e0 1px, transparent 1px),
+    /* background-image: linear-gradient(#e0e0e0 1px, transparent 1px),
         linear-gradient(90deg, #e0e0e0 1px, transparent 0px),
         linear-gradient(rgba(255, 255, 255, 0.3) 5px, transparent 100px),
         linear-gradient(90deg, rgba(255, 255, 255, 0.3) 5px, transparent 100px) !important;
     background-size: 100px 62px, calc(8.33% + 0px) 100px, 20px 20px, 20px 20px !important;
-    background-position: -2px -2px, -1px -2px, -1px -1px, -1px -1px !important;
-    min-height: 450px;
+    background-position: -2px -2px, -1px -2px, -1px -1px, -1px -1px !important; */
+    /* min-height: 10px; */
+
+    /* z-index: 0; */
+}
+
+#grid1 {
+    background: rgba(76, 175, 80, 0.3);
+}
+
+.grid-stack {
+    flex: 1;
+    background: #ccc;
 }
 
 .grid-stack > .grid-stack-item > .grid-stack-item-content {
     overflow-x: hidden !important;
     overflow-y: hidden !important;
+}
+
+.sidebar-scroll {
+    overflow-x: auto;
 }

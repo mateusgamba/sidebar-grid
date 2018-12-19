@@ -9,6 +9,11 @@ import "gridstack/dist/gridstack-extra.css";
 import ReactDOMServer from "react-dom/server";
 import dogImage from "./dog.jpg";
 import livingImage from "./living-room.jpg";
+//require("jquery-ui-touch-punch");
+
+// import "jquery-ui-dist/jquery-ui";
+// import "jquery-ui-touch-punch/jquery.ui.touch-punch";
+import "jquery.ui.touch/jquery.ui.touch";
 
 const styleImgDiv = {
     backgroundImage: `url(${dogImage})`,
@@ -21,7 +26,8 @@ const fullImg = {
     backgroundImage: `url(${livingImage})`,
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",
-    backgroundSize: "cover"
+    backgroundSize: "cover",
+    backgroundSize: "100% 100%"
 };
 
 export default class App extends Component {
@@ -130,7 +136,13 @@ export default class App extends Component {
             revert: "invalid",
             handle: ".grid-stack-item-content",
             scroll: false,
-            appendTo: "body"
+            appendTo: "body",
+            start: () => {
+                $("#sidebar").removeClass("sidebar-scroll");
+            },
+            stop: () => {
+                $("#sidebar").addClass("sidebar-scroll");
+            }
         });
     }
 
@@ -140,16 +152,26 @@ export default class App extends Component {
         // Load element sidebar
         this.$sidebarReact = $(this.sidebarReact);
 
-        const options = {
+        const gridStack = $("#grid1").gridstack({
+            disableOneColumnMode: true,
             width: 12,
             height: 6,
-            acceptWidgets: ".grid-stack-item",
+            acceptWidgets: true,
             float: true,
-            scroll: false,
+            verticalMargin: 20,
+            cellHeight: 60,
+            alwaysShowResizeHandle: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+                navigator.userAgent
+            ),
             animate: true
-        };
+        });
+        $(".grid-stack").addTouch();
+        $(".sidebar").addTouch();
+        $(".grid-stack").css("touch-action", "none");
+        let numberOfRows = 6;
 
-        const gridStack = this.$gridReact.gridstack(options);
+        let minHeight = numberOfRows * 60 + (numberOfRows - 1) * 20;
+        $("#grid1").css({ "min-height": minHeight });
 
         this.loadGrid();
         this.loadSidebar();
@@ -304,33 +326,47 @@ export default class App extends Component {
 
     render() {
         return (
-            <div>
-                <div className="container-fluid">
-                    <h1 className="mb-4">Drag drop from sidebar</h1>
+            <div id="root">
+                <header>
+                    <nav className="navbar navbar-dark bg-dark">
+                        <a className="navbar-brand" href="#">
+                            Drag drop from sidebar
+                        </a>
+                    </nav>
+                </header>
 
+                <div className="container-fluid" id="content">
                     <div className="row">
-                        <div className="col-md-3 bg-light pt-3">
+                        <div className="col-xs-12 col-sm-12 col-md-3 col-lg-2 bg-warning px-0">
+                            {/* Sidebar */}
+
                             <button
                                 type="button"
                                 className="btn btn-primary btn-block"
                                 onClick={this.onAddSidebar}
                             >
-                                Add Item
+                                Add Photo
                             </button>
-                            {/* Sidebar */}
+                            {/* <div id="nav"> */}
                             <div
-                                className="sidebar"
+                                className="sidebar sidebar-scroll"
                                 id="sidebar"
                                 ref={sidebarReact =>
                                     (this.sidebarReact = sidebarReact)
                                 }
                             />
+                            {/* </div> */}
                         </div>
 
-                        <div className="col-md-9" style={fullImg}>
+                        <div
+                            id="render"
+                            className="col-xs-12 col-sm-12 col-md-9 col-lg-10"
+                            style={fullImg}
+                        >
                             {/* Grid */}
                             <div
-                                className="grid-stack grid-stack-12"
+                                className="grid-stack"
+                                id="grid1"
                                 ref={gridReact => (this.gridReact = gridReact)}
                             />
                         </div>

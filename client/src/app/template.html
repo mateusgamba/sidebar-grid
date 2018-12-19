@@ -1,0 +1,46 @@
+<style>
+    html,
+    body,
+    app-root {
+        height: 100%;
+    }
+
+    app-root {
+        display: flex;
+        flex-direction: column;
+    }
+
+    #content {
+        flex: 1;
+    }
+
+    #content > .row {
+        height: 100%;
+    }
+
+    body {
+        background-color: rgb(236, 240, 241);
+    }
+
+    #nav,
+    #render {
+        padding-top: 15px;
+    }
+</style>
+<header>
+    <nav class="navbar navbar-light bg-light">
+        <span class="navbar-brand h1">Titulo</span>
+    </nav>
+</header>
+<main class="container-fluid" id="content">
+    <div class="row">
+        <section id="nav" class="col-2 bg-dark">
+            <p class="display-6 text-light"><small>Menu</small></p>
+
+            <p><a href="" class="btn btn-secondary">Produtos</a></p>
+            <p><a href="" class="btn btn-secondary">Usuarios</a></p>
+        </section>
+
+        <section id="render" class="col-10">Conteudo</section>
+    </div>
+</main>
