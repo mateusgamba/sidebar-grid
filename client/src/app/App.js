@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import "bootstrap/dist/css/bootstrap.css";
 import "./App.css";
 import $ from "jquery";
+import "./jquery-global.js";
+
 import "gridstack/dist/gridstack";
 import "gridstack/dist/gridstack.jQueryUI";
 import "gridstack/dist/gridstack.css";
@@ -12,7 +14,10 @@ import livingImage from "./living-room.jpg";
 //require("jquery-ui-touch-punch");
 
 // import "jquery-ui-dist/jquery-ui";
-// import "jquery-ui-touch-punch/jquery.ui.touch-punch";
+//import "jquery-ui/ui/widgets/mouse";
+// window.jQuery = $;
+// window.$ = $;
+import "jquery-ui-touch-punch/jquery.ui.touch-punch";
 //import "jquery.ui.touch/jquery.ui.touch";
 
 const styleImgDiv = {
@@ -159,11 +164,7 @@ export default class App extends Component {
             acceptWidgets: true,
             float: true,
             verticalMargin: 20,
-            cellHeight: 60,
-            alwaysShowResizeHandle: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-                navigator.userAgent
-            ),
-            animate: true
+            cellHeight: 60
         });
         //    $(".grid-stack").addTouch();
         // $(".sidebar").addTouch();

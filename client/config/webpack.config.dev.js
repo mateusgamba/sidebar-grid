@@ -87,10 +87,13 @@ module.exports = {
             // Support React Native Web
             // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
             "react-native": "react-native-web",
-            //"jquery-ui": "jquery-ui/ui",
-            "jquery-ui": "jquery-ui-dist/jquery-ui.js",
-            "jquery.ui.touch-punch":
-                "jquery-ui-touch-punch/jquery.ui.touch-punch"
+            // "jquery": "jquery/dist/jquery",
+            "jquery-ui": "jquery-ui/ui"
+            //"jquery-ui": "jquery-ui-dist/jquery-ui.js",
+
+            // "jquery.ui.mouse": "jquery-ui/ui/widgets/mouse",
+            // "jquery.ui.touch-punch":
+            //     "jquery-ui-touch-punch/jquery.ui.touch-punch"
         },
         plugins: [
             // Prevents users from importing files from outside of src/ (or node_modules/).
