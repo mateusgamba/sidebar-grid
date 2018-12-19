@@ -39,7 +39,7 @@ body {
 }
 
 .sidebar .grid-stack-item {
-    width: 200px;
+    width: 50px;
     height: 120px;
     /* border: 2px dashed green; */
     text-align: center;
@@ -48,14 +48,12 @@ body {
     background: rgba(0, 255, 0, 0.1);
     cursor: default;
     display: inline-block;
-    margin-bottom: 5px;
-    z-index: 1000;
 }
 
 .grid-stack-item {
     z-index: 1000;
-    position: relative;
 }
+
 .sidebar .grid-stack-item .grid-stack-item-content {
     height: 100%;
     border: 1px solid white;
@@ -73,25 +71,12 @@ body {
     display: none;
 }
 
-.grid-stack {
-    /* background-image: linear-gradient(#e0e0e0 1px, transparent 1px),
-        linear-gradient(90deg, #e0e0e0 1px, transparent 0px),
-        linear-gradient(rgba(255, 255, 255, 0.3) 5px, transparent 100px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.3) 5px, transparent 100px) !important;
-    background-size: 100px 62px, calc(8.33% + 0px) 100px, 20px 20px, 20px 20px !important;
-    background-position: -2px -2px, -1px -2px, -1px -1px, -1px -1px !important; */
-    /* min-height: 10px; */
-
-    /* z-index: 0; */
-}
-
 #grid1 {
-    background: rgba(76, 175, 80, 0.3);
+    background: rgba(87, 34, 177, 0.3);
 }
 
 .grid-stack {
     flex: 1;
-    background: #ccc;
 }
 
 .grid-stack > .grid-stack-item > .grid-stack-item-content {

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import "bootstrap/dist/css/bootstrap.css";
-import "./App.css";
+
 import $ from "jquery";
 import "./jquery-global.js";
 
@@ -8,6 +8,8 @@ import "gridstack/dist/gridstack";
 import "gridstack/dist/gridstack.jQueryUI";
 import "gridstack/dist/gridstack.css";
 import "gridstack/dist/gridstack-extra.css";
+import "./App.css";
+import "./grid.scss";
 import ReactDOMServer from "react-dom/server";
 import dogImage from "./dog.jpg";
 import livingImage from "./living-room.jpg";
@@ -90,23 +92,43 @@ export default class App extends Component {
 
     // Load grid items
     loadGrid() {
-        this.$gridReact = $(this.gridReact);
+        this.$gridReact1 = $(this.gridReact).data("gridstack");
         const items = this.state.itemsGrid;
         items.forEach(item => {
-            const widget = ReactDOMServer.renderToStaticMarkup(
-                <ItemGrid
-                    item={item}
-                    minWidth="2"
-                    maxWidth="4"
-                    minHeight="2"
-                    maxHeight="4"
-                />
-            );
+            // const widget = ReactDOMServer.renderToStaticMarkup(
+            //     <ItemGrid
+            //         item={item}
+            //         minWidth="1"
+            //         maxWidth="4"
+            //         minHeight="1"
+            //         maxHeight="4"
+            //     />
+            // );
 
-            this.$gridReact.append(widget);
-            const grid = this.$gridReact.data("gridstack");
-            grid.makeWidget(document.getElementById(item.id));
-        }, this.$gridReact);
+            // this.$gridReact.append(widget);
+            // const grid = this.$gridReact.data("gridstack");
+            // grid.makeWidget(document.getElementById(item.id));
+
+            this.$gridReact1.addWidget(
+                $(
+                    `<div id="${
+                        item.id
+                    }"><div class="grid-stack-item-content"><p><a href="javascript:void(0);" class="removeItemGrid">Remove Grid</a></p><p>${
+                        item.name
+                    }</p><p><a href="javascript:void(0);" class="deleteItemSidebar">Delete Sidebar</a></p></div></div>`
+                ),
+                item.x,
+                item.y,
+                item.width,
+                item.height,
+                false,
+                1,
+                4,
+                1,
+                4,
+                item.id
+            );
+        }, this.$gridReact1);
     }
 
     // Load sidebar items
@@ -117,9 +139,9 @@ export default class App extends Component {
             return ReactDOMServer.renderToStaticMarkup(
                 <ItemGrid
                     item={item}
-                    minWidth="2"
+                    minWidth="1"
                     maxWidth="4"
-                    minHeight="2"
+                    minHeight="1"
                     maxHeight="4"
                 />
             );
@@ -142,11 +164,18 @@ export default class App extends Component {
             handle: ".grid-stack-item-content",
             scroll: false,
             appendTo: "body",
-            start: () => {
+            start: a => {
                 $("#sidebar").removeClass("sidebar-scroll");
+                $("#" + a.target.id).attr("data-gs-width", 1);
+                //   console.log("teste");
             },
-            stop: () => {
+            stop: a => {
                 $("#sidebar").addClass("sidebar-scroll");
+                //  $("#" + a.target.id).attr("data-gs-width", 1);
+            },
+            drag: a => {
+                console.log(a.target.id);
+                $("#" + a.target.id).attr("data-gs-width", 1);
             }
         });
     }
@@ -159,9 +188,9 @@ export default class App extends Component {
 
         const gridStack = $("#grid1").gridstack({
             disableOneColumnMode: true,
-            width: 12,
             height: 6,
-            acceptWidgets: true,
+            width: 4,
+            acceptWidgets: ".grid-stack-item",
             float: true,
             verticalMargin: 20,
             cellHeight: 60,
@@ -180,6 +209,12 @@ export default class App extends Component {
         this.loadGrid();
         this.loadSidebar();
 
+        this.$gridReact.on("dragstart", function(event, ui) {
+            var grid = this;
+            var element = event.target;
+            console.log("dragstart");
+        });
+
         this.$gridReact.on("change", this.onChange.bind(this));
         this.$gridReact.on("added", this.onAddGridFromSidebar.bind(this));
         this.$gridReact.on(
@@ -193,6 +228,12 @@ export default class App extends Component {
             ".deleteItemSidebar",
             this.onDeleteItemSidebar.bind(this)
         );
+
+        $(".grid-stack").on("dragstart", function(event, ui) {
+            var grid = this;
+            var element = event.target;
+            console.log(element);
+        });
     }
 
     componentWillUnmount() {
@@ -216,7 +257,7 @@ export default class App extends Component {
         if (items === undefined) {
             return false;
         }
-
+        console.log("change");
         items.forEach(item => {
             this.updateItemGrid(item);
         });
@@ -236,25 +277,34 @@ export default class App extends Component {
         this.setState({ itemsGrid });
 
         this.saveStorage();
+        //$("#" + id).attr("data-gs-width", 1);
     }
 
     // From sidebar to grid
     onAddGridFromSidebar(e, items) {
+        console.log("add-grid");
         const id = items[0].el[0].id;
         const itemsSidebar = [...this.state.itemsSidebar];
 
         const index = itemsSidebar.map(item => item.id).indexOf(id);
+
+        console.log("index", index);
         const itemGrid = itemsSidebar[index];
+
+        console.log("itemGrid", itemGrid);
         itemsSidebar.splice(index, 1);
 
         this.setState(prevState => ({
             itemsSidebar,
             itemsGrid: [...prevState.itemsGrid, itemGrid]
         }));
+
+        //  $("#" + id).attr("data-gs-width", 1);
     }
 
     // From grid to sidebar
     onRemoveItemGrid(e) {
+        console.log(e);
         const id = e.target.parentElement.parentElement.parentElement.id;
 
         // Remove item from grid by dom
@@ -346,7 +396,7 @@ export default class App extends Component {
 
                             <button
                                 type="button"
-                                className="btn btn-primary btn-block"
+                                className="btn btn-primary btn-block green"
                                 onClick={this.onAddSidebar}
                             >
                                 Add Photo
@@ -365,11 +415,11 @@ export default class App extends Component {
                         <div
                             id="render"
                             className="col-xs-12 col-sm-12 col-md-9 col-lg-10"
-                            style={fullImg}
+                            // style={fullImg}
                         >
                             {/* Grid */}
                             <div
-                                className="grid-stack"
+                                className="grid-stack grid-stack-4"
                                 id="grid1"
                                 ref={gridReact => (this.gridReact = gridReact)}
                             />
@@ -386,22 +436,20 @@ class ItemGrid extends Component {
         return (
             <div
                 id={this.props.item.id}
-                className="grid-stack-item ui-draggable"
-                data-gs-id={this.props.item.id}
-                data-gs-x={this.props.item.x}
-                data-gs-y={this.props.item.y}
-                data-gs-width={this.props.item.width}
-                data-gs-height={this.props.item.height}
-                data-gs-min-width={this.props.minWidth}
-                data-gs-max-width={this.props.maxWidth}
-                data-gs-min-height={this.props.minHeight}
-                data-gs-max-height={this.props.maxHeight}
-                data-gs-auto-position="0"
+                className="grid-stack-item"
+                //className="grid-stack-item ui-draggable"
+                // data-gs-id={this.props.item.id}
+                // data-gs-x={this.props.item.x}
+                // data-gs-y={this.props.item.y}
+                data-gs-width="1"
+                // data-gs-height={this.props.item.height}
+                // data-gs-min-width={this.props.minWidth}
+                // data-gs-max-width={this.props.maxWidth}
+                // data-gs-min-height={this.props.minHeight}
+                // data-gs-max-height={this.props.maxHeight}
+                // data-gs-auto-position="0"
             >
-                <div
-                    className="grid-stack-item-content ui-draggable-handle"
-                    style={styleImgDiv}
-                >
+                <div className="grid-stack-item-content" style={styleImgDiv}>
                     <p>
                         <a
                             href="javascript:void(0);"
