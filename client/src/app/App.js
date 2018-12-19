@@ -13,7 +13,7 @@ import livingImage from "./living-room.jpg";
 
 // import "jquery-ui-dist/jquery-ui";
 // import "jquery-ui-touch-punch/jquery.ui.touch-punch";
-import "jquery.ui.touch/jquery.ui.touch";
+//import "jquery.ui.touch/jquery.ui.touch";
 
 const styleImgDiv = {
     backgroundImage: `url(${dogImage})`,
@@ -165,9 +165,9 @@ export default class App extends Component {
             ),
             animate: true
         });
-        $(".grid-stack").addTouch();
-        $(".sidebar").addTouch();
-        $(".grid-stack").css("touch-action", "none");
+        //    $(".grid-stack").addTouch();
+        // $(".sidebar").addTouch();
+        // $(".grid-stack").css("touch-action", "none");
         let numberOfRows = 6;
 
         let minHeight = numberOfRows * 60 + (numberOfRows - 1) * 20;
