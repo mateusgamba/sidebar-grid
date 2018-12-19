@@ -34,4 +34,4 @@ Open webpack.config.dev.js file into config folder and you go to line where you 
 'jquery-ui': 'jquery-ui/ui'
 ```
 
-![alias](doc/alias-config-webpack.png =400x)
+![alias](doc/alias-config-webpack.png)
