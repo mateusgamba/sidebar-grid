@@ -164,7 +164,10 @@ export default class App extends Component {
             acceptWidgets: true,
             float: true,
             verticalMargin: 20,
-            cellHeight: 60
+            cellHeight: 60,
+            alwaysShowResizeHandle: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+                navigator.userAgent
+            )
         });
         //    $(".grid-stack").addTouch();
         // $(".sidebar").addTouch();
