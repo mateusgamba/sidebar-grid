@@ -11,7 +11,7 @@ body {
     height: 100%;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
     .sidebar {
         white-space: nowrap;
         height: 100px;
@@ -104,4 +104,13 @@ body {
 
 .sidebar-scroll {
     overflow-x: auto;
+}
+
+@media (min-width: 768px) {
+    .navbar-brand.abs {
+        position: absolute;
+        width: 100%;
+        left: 0;
+        text-align: center;
+    }
 }

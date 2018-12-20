@@ -1,26 +1,17 @@
 import React, { Component } from "react";
+import ReactDOMServer from "react-dom/server";
 import "bootstrap/dist/css/bootstrap.css";
-
 import $ from "jquery";
-import "./jquery-global.js";
-
 import "gridstack/dist/gridstack";
 import "gridstack/dist/gridstack.jQueryUI";
 import "gridstack/dist/gridstack.css";
 import "gridstack/dist/gridstack-extra.css";
 import "./App.css";
 import "./grid.scss";
-import ReactDOMServer from "react-dom/server";
 import dogImage from "./dog.jpg";
 import livingImage from "./living-room.jpg";
-//require("jquery-ui-touch-punch");
-
-// import "jquery-ui-dist/jquery-ui";
-//import "jquery-ui/ui/widgets/mouse";
-// window.jQuery = $;
-// window.$ = $;
+import "./jquery-global.js";
 import "jquery-ui-touch-punch/jquery.ui.touch-punch";
-//import "jquery.ui.touch/jquery.ui.touch";
 
 const styleImgDiv = {
     backgroundImage: `url(${dogImage})`,
@@ -33,8 +24,7 @@ const fullImg = {
     backgroundImage: `url(${livingImage})`,
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",
-    backgroundSize: "cover",
-    backgroundSize: "100% 100%"
+    backgroundSize: "cover"
 };
 
 export default class App extends Component {
@@ -86,8 +76,6 @@ export default class App extends Component {
             itemsGrid,
             itemsSidebar
         };
-
-        this.onAddSidebar = this.onAddSidebar.bind(this);
     }
 
     // Load grid items
@@ -95,19 +83,6 @@ export default class App extends Component {
         this.$gridReact1 = $(this.gridReact).data("gridstack");
         const items = this.state.itemsGrid;
         items.forEach(item => {
-            // const widget = ReactDOMServer.renderToStaticMarkup(
-            //     <ItemGrid
-            //         item={item}
-            //         minWidth="1"
-            //         maxWidth="4"
-            //         minHeight="1"
-            //         maxHeight="4"
-            //     />
-            // );
-
-            // this.$gridReact.append(widget);
-            // const grid = this.$gridReact.data("gridstack");
-            // grid.makeWidget(document.getElementById(item.id));
             const styleInside =
                 "background-image:url(/static/media/dog.35c8b035.jpg);background-size:100% 100%;background-repeat:no-repeat;object-fit:cover";
             this.$gridReact1.addWidget(
@@ -167,16 +142,11 @@ export default class App extends Component {
             appendTo: "body",
             start: a => {
                 $("#sidebar").removeClass("sidebar-scroll");
-                $("#" + a.target.id).attr("data-gs-width", 1);
-                //   console.log("teste");
+                // $("#c").css("height", "20px");
+                $("#" + a.target.id).css("height", "50px");
             },
-            stop: a => {
+            stop: () => {
                 $("#sidebar").addClass("sidebar-scroll");
-                //  $("#" + a.target.id).attr("data-gs-width", 1);
-            },
-            drag: a => {
-                console.log(a.target.id);
-                $("#" + a.target.id).attr("data-gs-width", 1);
             }
         });
     }
@@ -194,27 +164,18 @@ export default class App extends Component {
             acceptWidgets: ".grid-stack-item",
             float: true,
             verticalMargin: 20,
-            cellHeight: 60,
+            cellHeight: 40,
             alwaysShowResizeHandle: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
                 navigator.userAgent
             )
         });
-        //    $(".grid-stack").addTouch();
-        // $(".sidebar").addTouch();
-        // $(".grid-stack").css("touch-action", "none");
         let numberOfRows = 6;
 
-        let minHeight = numberOfRows * 60 + (numberOfRows - 1) * 20;
+        let minHeight = numberOfRows * 40 + (numberOfRows - 1) * 20;
         $("#grid1").css({ "min-height": minHeight });
 
         this.loadGrid();
         this.loadSidebar();
-
-        this.$gridReact.on("dragstart", function(event, ui) {
-            var grid = this;
-            var element = event.target;
-            console.log("dragstart");
-        });
 
         this.$gridReact.on("change", this.onChange.bind(this));
         this.$gridReact.on("added", this.onAddGridFromSidebar.bind(this));
@@ -229,12 +190,6 @@ export default class App extends Component {
             ".deleteItemSidebar",
             this.onDeleteItemSidebar.bind(this)
         );
-
-        $(".grid-stack").on("dragstart", function(event, ui) {
-            var grid = this;
-            var element = event.target;
-            console.log(element);
-        });
     }
 
     componentWillUnmount() {
@@ -258,7 +213,6 @@ export default class App extends Component {
         if (items === undefined) {
             return false;
         }
-        console.log("change");
         items.forEach(item => {
             this.updateItemGrid(item);
         });
@@ -278,34 +232,25 @@ export default class App extends Component {
         this.setState({ itemsGrid });
 
         this.saveStorage();
-        //$("#" + id).attr("data-gs-width", 1);
     }
 
     // From sidebar to grid
     onAddGridFromSidebar(e, items) {
-        console.log("add-grid");
         const id = items[0].el[0].id;
         const itemsSidebar = [...this.state.itemsSidebar];
 
         const index = itemsSidebar.map(item => item.id).indexOf(id);
-
-        console.log("index", index);
         const itemGrid = itemsSidebar[index];
-
-        console.log("itemGrid", itemGrid);
         itemsSidebar.splice(index, 1);
 
         this.setState(prevState => ({
             itemsSidebar,
             itemsGrid: [...prevState.itemsGrid, itemGrid]
         }));
-
-        //  $("#" + id).attr("data-gs-width", 1);
     }
 
     // From grid to sidebar
     onRemoveItemGrid(e) {
-        console.log(e);
         const id = e.target.parentElement.parentElement.parentElement.id;
 
         // Remove item from grid by dom
@@ -383,10 +328,46 @@ export default class App extends Component {
         return (
             <div id="root">
                 <header>
-                    <nav className="navbar navbar-dark bg-dark">
-                        <a className="navbar-brand" href="#">
-                            Drag drop from sidebar
+                    <nav className="navbar navbar-expand-md navbar-white bg-white">
+                        <a className="navbar-brand abs" href="#">
+                            Photo Grid
                         </a>
+                        <button
+                            className="navbar-toggler"
+                            type="button"
+                            data-toggle="collapse"
+                            data-target="#collapsingNavbar"
+                        >
+                            <span className="navbar-toggler-icon" />
+                        </button>
+                        <div
+                            className="navbar-collapse collapse"
+                            id="collapsingNavbar"
+                        >
+                            <ul className="navbar-nav ml-auto">
+                                <li className="nav-item">
+                                    <a
+                                        className="nav-link"
+                                        href=""
+                                        data-target="#myModal"
+                                        data-toggle="modal"
+                                    >
+                                        Save
+                                    </a>
+                                </li>
+
+                                <li className="nav-item">
+                                    <a
+                                        className="nav-link"
+                                        href=""
+                                        data-target="#myModal"
+                                        data-toggle="modal"
+                                    >
+                                        Buy
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
                     </nav>
                 </header>
 
@@ -398,11 +379,10 @@ export default class App extends Component {
                             <button
                                 type="button"
                                 className="btn btn-primary btn-block green"
-                                onClick={this.onAddSidebar}
+                                onClick={this.onAddSidebar.bind(this)}
                             >
                                 Add Photo
                             </button>
-                            {/* <div id="nav"> */}
                             <div
                                 className="sidebar sidebar-scroll"
                                 id="sidebar"
@@ -410,7 +390,6 @@ export default class App extends Component {
                                     (this.sidebarReact = sidebarReact)
                                 }
                             />
-                            {/* </div> */}
                         </div>
 
                         <div
@@ -419,11 +398,15 @@ export default class App extends Component {
                             style={fullImg}
                         >
                             {/* Grid */}
-                            <div
-                                className="grid-stack grid-stack-4"
-                                id="grid1"
-                                ref={gridReact => (this.gridReact = gridReact)}
-                            />
+                            <div className="col-md-4 offset-md-4">
+                                <div
+                                    className="grid-stack grid-stack-4"
+                                    id="grid1"
+                                    ref={gridReact =>
+                                        (this.gridReact = gridReact)
+                                    }
+                                />
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -435,22 +418,7 @@ export default class App extends Component {
 class ItemGrid extends Component {
     render() {
         return (
-            <div
-                id={this.props.item.id}
-                className="grid-stack-item"
-                //className="grid-stack-item ui-draggable"
-                // data-gs-id={this.props.item.id}
-                // data-gs-x={this.props.item.x}
-                // data-gs-y={this.props.item.y}
-                // data-gs-width="1"
-
-                // data-gs-height={this.props.item.height}
-                // data-gs-min-width={this.props.minWidth}
-                // data-gs-max-width={this.props.maxWidth}
-                // data-gs-min-height={this.props.minHeight}
-                // data-gs-max-height={this.props.maxHeight}
-                // data-gs-auto-position="0"
-            >
+            <div id={this.props.item.id} className="grid-stack-item">
                 <div className="grid-stack-item-content" style={styleImgDiv}>
                     <p>
                         <a
