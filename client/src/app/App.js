@@ -108,12 +108,13 @@ export default class App extends Component {
             // this.$gridReact.append(widget);
             // const grid = this.$gridReact.data("gridstack");
             // grid.makeWidget(document.getElementById(item.id));
-
+            const styleInside =
+                "background-image:url(/static/media/dog.35c8b035.jpg);background-size:100% 100%;background-repeat:no-repeat;object-fit:cover";
             this.$gridReact1.addWidget(
                 $(
                     `<div id="${
                         item.id
-                    }"><div class="grid-stack-item-content"><p><a href="javascript:void(0);" class="removeItemGrid">Remove Grid</a></p><p>${
+                    }"><div class="grid-stack-item-content" style="${styleInside}"><p><a href="javascript:void(0);" class="removeItemGrid">Remove Grid</a></p><p>${
                         item.name
                     }</p><p><a href="javascript:void(0);" class="deleteItemSidebar">Delete Sidebar</a></p></div></div>`
                 ),
@@ -415,7 +416,7 @@ export default class App extends Component {
                         <div
                             id="render"
                             className="col-xs-12 col-sm-12 col-md-9 col-lg-10"
-                            // style={fullImg}
+                            style={fullImg}
                         >
                             {/* Grid */}
                             <div
@@ -441,7 +442,8 @@ class ItemGrid extends Component {
                 // data-gs-id={this.props.item.id}
                 // data-gs-x={this.props.item.x}
                 // data-gs-y={this.props.item.y}
-                data-gs-width="1"
+                // data-gs-width="1"
+
                 // data-gs-height={this.props.item.height}
                 // data-gs-min-width={this.props.minWidth}
                 // data-gs-max-width={this.props.maxWidth}
@@ -464,7 +466,7 @@ class ItemGrid extends Component {
                             href="javascript:void(0);"
                             className="deleteItemSidebar"
                         >
-                            Delete Sidebar
+                            Delete
                         </a>
                     </p>
                 </div>
