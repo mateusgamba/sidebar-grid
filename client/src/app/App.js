@@ -74,7 +74,7 @@ export default class App extends Component {
             itemsSidebar
         };
 
-        this.onAddSidebar = this.onAddSidebar.bind(this);
+        // this.onAddSidebar = this.onAddSidebar.bind(this);
     }
 
     // Load grid items
@@ -143,13 +143,11 @@ export default class App extends Component {
         const options = {
             width: 12,
             height: 6,
-            acceptWidgets: ".grid-stack-item",
-            float: true,
-            scroll: false,
-            animate: true
+            acceptWidgets: true,
+            float: true
         };
 
-        const gridStack = this.$gridReact.gridstack(options);
+        this.$gridReact.gridstack(options);
 
         this.loadGrid();
         this.loadSidebar();
@@ -159,7 +157,6 @@ export default class App extends Component {
         this.$gridReact.on(
             "click",
             ".removeItemGrid",
-            { gridStack },
             this.onRemoveItemGrid.bind(this)
         );
         this.$sidebarReact.on(
@@ -175,7 +172,6 @@ export default class App extends Component {
         $(this.gridReact).on(
             "click",
             ".removeItemGrid",
-            {},
             this.onRemoveItemGrid.bind(this)
         );
         $(this.$sidebarReact).on(
@@ -313,7 +309,7 @@ export default class App extends Component {
                             <button
                                 type="button"
                                 className="btn btn-primary btn-block"
-                                onClick={this.onAddSidebar}
+                                onClick={this.onAddSidebar.bind(this)}
                             >
                                 Add Item
                             </button>
@@ -327,7 +323,7 @@ export default class App extends Component {
                             />
                         </div>
 
-                        <div className="col-md-9" style={fullImg}>
+                        <div className="col-md-9" /*style={fullImg} */>
                             {/* Grid */}
                             <div
                                 className="grid-stack grid-stack-12"
@@ -346,7 +342,7 @@ class ItemGrid extends Component {
         return (
             <div
                 id={this.props.item.id}
-                className="grid-stack-item ui-draggable"
+                className="grid-stack-item"
                 data-gs-id={this.props.item.id}
                 data-gs-x={this.props.item.x}
                 data-gs-y={this.props.item.y}
@@ -359,8 +355,8 @@ class ItemGrid extends Component {
                 data-gs-auto-position="0"
             >
                 <div
-                    className="grid-stack-item-content ui-draggable-handle"
-                    style={styleImgDiv}
+                    className="grid-stack-item-content"
+                    // style={styleImgDiv}
                 >
                     <p>
                         <a

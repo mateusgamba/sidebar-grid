@@ -105,22 +105,14 @@ The layout build must contain sidebar and grid and both need of the ref for use 
 </div>
 ```
 
-To finish the all layout it is necessary to create the item. The item will be a new component.
+It's necessary create a component for items of the grid and sidebar
 
 ```javascript
 class ItemGrid extends Component {
     render() {
         return (
-            <div
-                id={this.props.item.id}
-                className="grid-stack-item ui-draggable"
-                data-gs-id={this.props.item.id}
-                data-gs-x={this.props.item.x}
-                data-gs-y={this.props.item.y}
-                data-gs-width={this.props.item.width}
-                data-gs-height={this.props.item.height}
-            >
-                <div className="grid-stack-item-content ui-draggable-handle">
+            <div id={this.props.item.id} className="grid-stack-item">
+                <div className="grid-stack-item-content">
                     <p>
                         <a
                             href="javascript:void(0);"
@@ -144,3 +136,115 @@ class ItemGrid extends Component {
     }
 }
 ```
+
+For finishing all layout it is necessary to create the css file.
+
+```css
+.grid-stack {
+    background: lightgoldenrodyellow;
+}
+
+.grid-stack-item-content {
+    color: #2c3e50;
+    text-align: center;
+    background-color: #18bc9c;
+}
+
+.sidebar {
+    padding: 25px 0;
+    text-align: center;
+}
+
+.sidebar .grid-stack-item {
+    width: 200px;
+    height: 100px;
+    text-align: center;
+    line-height: 100px;
+    z-index: 10;
+    background: rgba(0, 255, 0, 0.1);
+    cursor: default;
+    display: inline-block;
+    margin-bottom: 5px;
+}
+
+.sidebar .grid-stack-item .grid-stack-item-content {
+    background: none;
+}
+
+.sidebar .grid-stack-item .grid-stack-item-content {
+    height: 100%;
+    background: none;
+}
+
+.sidebar .grid-stack-item .grid-stack-item-content > p {
+    line-height: normal;
+}
+
+.sidebar .grid-stack-item .grid-stack-item-content .removeItemGrid,
+.grid-stack .grid-stack-item .grid-stack-item-content .deleteItemSidebar {
+    display: none;
+}
+```
+
+The .removeItemGrid show the remove link when the item is on grid and .deleteItemSidebar show the delete link when item is on sidebar, both are different actions.
+
+The implemantation start with componentDidMount method:
+
+```javascript
+componentDidMount() {
+    // Load element grid
+    this.$gridReact = $(this.gridReact);
+    // Load element sidebar
+    this.$sidebarReact = $(this.sidebarReact);
+
+    // Definition of the grid options
+    const options = {
+        width: 12,
+        height: 6,
+        acceptWidgets: true,
+        float: true
+    };
+
+    // Set option in gridstack
+    this.$gridReact.gridstack(options);
+
+    // Load grid items
+    this.loadGrid();
+    // Load sidebar items
+    this.loadSidebar();
+
+    this.$gridReact.on("change", this.onChange.bind(this));
+    this.$gridReact.on("added", this.onAdded.bind(this));
+
+    this.$gridReact.on(
+        "click",
+        ".removeItemGrid",
+        this.onRemoveItemGrid.bind(this)
+    );
+    this.$sidebarReact.on(
+        "click",
+        ".deleteItemSidebar",
+        this.onDeleteItemSidebar.bind(this)
+    );
+}
+```
+
+The this.$gridReact and this.$sidebarReact are used to get the reference of the element DOM.
+The options variable are the grid parameters.
+
+-   width: amount of columns;
+-   height: maximum rows amount;
+-   acceptWidgets" accept widgets dragged from other grids or from outside;
+-   float: enable floating widgets;
+
+For more information, access [doc](https://github.com/gridstack/gridstack.js/tree/develop/doc#options)
+
+Next line are setting up the parameters in grid.
+
+The this.loadGrid() and this.loadSidebar() call the methods to load the items.
+
+After, it is attaches event handlers for grid, the gridstack has some events, you can access [doc](https://github.com/gridstack/gridstack.js/tree/develop/doc#events) to know all events.
+
+For this tutorial only are used change and added. change is used to adding/removing items or existing items change their position/size. And the added is used to add item from sidebar to grid.
+
+The two other events are responsibles for remove item from grid and sidebar.

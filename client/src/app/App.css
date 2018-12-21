@@ -9,6 +9,10 @@
     text-align: center;
 }
 
+.grid-stack {
+    background: lightgoldenrodyellow;
+}
+
 .sidebar .grid-stack-item {
     width: 200px;
     height: 120px;
@@ -24,32 +28,29 @@
 
 .sidebar .grid-stack-item .grid-stack-item-content {
     height: 100%;
-    border: 1px solid white;
+    background: none;
 }
 
 .sidebar .grid-stack-item .grid-stack-item-content > p {
     line-height: normal;
 }
 
+.sidebar .grid-stack-item .grid-stack-item-content .removeItemGrid,
 .grid-stack .grid-stack-item .grid-stack-item-content .deleteItemSidebar {
     display: none;
 }
 
-.sidebar .grid-stack-item .grid-stack-item-content .removeItemGrid {
-    display: none;
-}
-
 .grid-stack {
-    background-image: linear-gradient(#e0e0e0 1px, transparent 1px),
+    /* background-image: linear-gradient(#e0e0e0 1px, transparent 1px),
         linear-gradient(90deg, #e0e0e0 1px, transparent 0px),
         linear-gradient(rgba(255, 255, 255, 0.3) 5px, transparent 100px),
         linear-gradient(90deg, rgba(255, 255, 255, 0.3) 5px, transparent 100px) !important;
     background-size: 100px 62px, calc(8.33% + 0px) 100px, 20px 20px, 20px 20px !important;
-    background-position: -2px -2px, -1px -2px, -1px -1px, -1px -1px !important;
+    background-position: -2px -2px, -1px -2px, -1px -1px, -1px -1px !important; */
     min-height: 450px;
 }
 
-.grid-stack > .grid-stack-item > .grid-stack-item-content {
+/* .grid-stack > .grid-stack-item > .grid-stack-item-content {
     overflow-x: hidden !important;
     overflow-y: hidden !important;
-}
+} */
