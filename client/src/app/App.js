@@ -83,26 +83,13 @@ export default class App extends Component {
         this.$gridReact1 = $(this.gridReact).data("gridstack");
         const items = this.state.itemsGrid;
         items.forEach(item => {
-            const styleInside =
-                "background-image:url(/static/media/dog.35c8b035.jpg);background-size:100% 100%;background-repeat:no-repeat;object-fit:cover";
             this.$gridReact1.addWidget(
-                $(
-                    `<div id="${
-                        item.id
-                    }"><div class="grid-stack-item-content" style="${styleInside}"><p><a href="javascript:void(0);" class="removeItemGrid">Remove Grid</a></p><p>${
-                        item.name
-                    }</p><p><a href="javascript:void(0);" class="deleteItemSidebar">Delete Sidebar</a></p></div></div>`
-                ),
+                ReactDOMServer.renderToStaticMarkup(<ItemGrid item={item} />),
                 item.x,
                 item.y,
                 item.width,
                 item.height,
-                false,
-                1,
-                4,
-                1,
-                4,
-                item.id
+                false
             );
         }, this.$gridReact1);
     }
@@ -110,16 +97,10 @@ export default class App extends Component {
     // Load sidebar items
     loadSidebar() {
         // Load state
-        const itemsSidebar = [...this.state.itemsSidebar];
+        const itemsSidebar = this.state.itemsSidebar;
         const items = itemsSidebar.map(item => {
             return ReactDOMServer.renderToStaticMarkup(
-                <ItemGrid
-                    item={item}
-                    minWidth="1"
-                    maxWidth="4"
-                    minHeight="1"
-                    maxHeight="4"
-                />
+                <ItemGrid item={item} />
             );
         });
         // Load element
@@ -135,18 +116,17 @@ export default class App extends Component {
     // event drag drop from sidebar to grid
     dragSidebar() {
         this.$sidebarReact = $(this.sidebarReact);
+
         this.$sidebarReact.children().draggable({
             revert: "invalid",
             handle: ".grid-stack-item-content",
             scroll: false,
             appendTo: "body",
-            start: a => {
-                $("#sidebar").removeClass("sidebar-scroll");
-                // $("#c").css("height", "20px");
-                $("#" + a.target.id).css("height", "50px");
+            start: () => {
+                this.$sidebarReact.removeClass("sidebar-scroll");
             },
             stop: () => {
-                $("#sidebar").addClass("sidebar-scroll");
+                this.$sidebarReact.addClass("sidebar-scroll");
             }
         });
     }
@@ -209,6 +189,7 @@ export default class App extends Component {
     }
 
     // catch the change
+    // itens necessary change because a update can change many box
     onChange(e, items) {
         if (items === undefined) {
             return false;
@@ -401,6 +382,8 @@ export default class App extends Component {
                             <div className="col-md-4 offset-md-4">
                                 <div
                                     className="grid-stack grid-stack-4"
+                                    data_gridstack_node='{"width":"1"}'
+                                    data-_gridstack_node='{"width":"1"}'
                                     id="grid1"
                                     ref={gridReact =>
                                         (this.gridReact = gridReact)
@@ -418,7 +401,12 @@ export default class App extends Component {
 class ItemGrid extends Component {
     render() {
         return (
-            <div id={this.props.item.id} className="grid-stack-item">
+            <div
+                id={this.props.item.id}
+                className="grid-stack-item"
+                data-_gridstack_node='{"width":1, "height":1}'
+                data-gs-id={this.props.item.id}
+            >
                 <div className="grid-stack-item-content" style={styleImgDiv}>
                     <p>
                         <a
