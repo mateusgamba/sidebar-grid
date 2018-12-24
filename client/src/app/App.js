@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import ReactDOMServer from "react-dom/server";
+import { renderToStaticMarkup } from "react-dom/server";
 import "bootstrap/dist/css/bootstrap.css";
 import $ from "jquery";
 import "gridstack/dist/gridstack";
@@ -91,6 +91,13 @@ export default class App extends Component {
         };
     }
 
+    setMinHeightGrid() {
+        const minHeight =
+            this.optionsGrid.height * this.optionsGrid.cellHeight +
+            (this.optionsGrid.height - 1) * this.optionsGrid.verticalMargin;
+        this.$gridReact.css({ "min-height": minHeight });
+    }
+
     componentDidMount() {
         // Load element grid
         this.$gridReact = $(this.gridReact);
@@ -101,16 +108,11 @@ export default class App extends Component {
         this.$gridReact.gridstack(this.optionsGrid);
 
         // Define minHeight grid
-        // TODO: put in construct
-        const minHeight =
-            this.optionsGrid.height * this.optionsGrid.cellHeight +
-            (this.optionsGrid.height - 1) * this.optionsGrid.verticalMargin;
-        this.$gridReact.css({ "min-height": minHeight });
+        this.setMinHeightGrid();
 
         this.loadGrid();
         this.loadSidebar();
 
-        // TODO: https://tableless.com.br/jquery-conheca-os-metodos-on-e-off/
         this.$gridReact.on("change", this.onChange.bind(this));
         this.$gridReact.on("added", this.onAddGridFromSidebar.bind(this));
         this.$gridReact.on(
@@ -124,20 +126,20 @@ export default class App extends Component {
             ".deleteItemSidebar",
             this.onDeleteItemSidebar.bind(this)
         );
+        this.$sidebarReact.on("dragstart", this.onDragStartSidebar.bind(this));
+    }
 
-        // TODO: put in other method
-        this.$sidebarReact.on("dragstart", (event, ui) => {
-            const id = ui.helper[0].id;
-            const elementItem = document.getElementById(id);
-            this.$sidebarReact.removeClass("sidebar-scroll");
-            elementItem.setAttribute(
-                "data-_gridstack_node",
-                JSON.stringify({
-                    width: 1,
-                    height: 2
-                })
-            );
-        });
+    onDragStartSidebar(event, ui) {
+        const id = ui.helper[0].id;
+        const elementItem = document.getElementById(id);
+        this.$sidebarReact.removeClass("sidebar-scroll");
+        elementItem.setAttribute(
+            "data-_gridstack_node",
+            JSON.stringify({
+                width: 1,
+                height: 1
+            })
+        );
     }
 
     componentWillUnmount() {
@@ -161,7 +163,7 @@ export default class App extends Component {
         const items = this.state.itemsGrid;
         items.forEach(item => {
             grid.addWidget(
-                ReactDOMServer.renderToStaticMarkup(<ItemGrid item={item} />),
+                renderToStaticMarkup(<ItemGrid item={item} />),
                 item.x,
                 item.y,
                 item.width,
@@ -176,9 +178,7 @@ export default class App extends Component {
         // Load state
         const itemsSidebar = this.state.itemsSidebar;
         const items = itemsSidebar.map(item => {
-            return ReactDOMServer.renderToStaticMarkup(
-                <ItemGrid item={item} />
-            );
+            return renderToStaticMarkup(<ItemGrid item={item} />);
         });
         // Remove all children of the sidebar
         this.$sidebarReact.children().remove();
