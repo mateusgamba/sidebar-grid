@@ -76,14 +76,91 @@ export default class App extends Component {
             itemsGrid,
             itemsSidebar
         };
+
+        this.optionsGrid = {
+            disableOneColumnMode: true,
+            height: 6,
+            width: 4,
+            acceptWidgets: true,
+            float: true,
+            verticalMargin: 20,
+            cellHeight: 40,
+            alwaysShowResizeHandle: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+                navigator.userAgent
+            )
+        };
+    }
+
+    componentDidMount() {
+        // Load element grid
+        this.$gridReact = $(this.gridReact);
+        // Load element sidebar
+        this.$sidebarReact = $(this.sidebarReact);
+
+        //build grid
+        this.$gridReact.gridstack(this.optionsGrid);
+
+        // Define minHeight grid
+        // TODO: put in construct
+        const minHeight =
+            this.optionsGrid.height * this.optionsGrid.cellHeight +
+            (this.optionsGrid.height - 1) * this.optionsGrid.verticalMargin;
+        this.$gridReact.css({ "min-height": minHeight });
+
+        this.loadGrid();
+        this.loadSidebar();
+
+        // TODO: https://tableless.com.br/jquery-conheca-os-metodos-on-e-off/
+        this.$gridReact.on("change", this.onChange.bind(this));
+        this.$gridReact.on("added", this.onAddGridFromSidebar.bind(this));
+        this.$gridReact.on(
+            "click",
+            ".removeItemGrid",
+            this.onRemoveItemGrid.bind(this)
+        );
+
+        this.$sidebarReact.on(
+            "click",
+            ".deleteItemSidebar",
+            this.onDeleteItemSidebar.bind(this)
+        );
+
+        // TODO: put in other method
+        this.$sidebarReact.on("dragstart", (event, ui) => {
+            const id = ui.helper[0].id;
+            const elementItem = document.getElementById(id);
+            this.$sidebarReact.removeClass("sidebar-scroll");
+            elementItem.setAttribute(
+                "data-_gridstack_node",
+                JSON.stringify({
+                    width: 1,
+                    height: 2
+                })
+            );
+        });
+    }
+
+    componentWillUnmount() {
+        $(this.gridReact).off("change", this.onChange.bind(this));
+        $(this.gridReact).off("added", this.onAddGridFromSidebar.bind(this));
+        $(this.gridReact).off(
+            "click",
+            ".removeItemGrid",
+            this.onRemoveItemGrid.bind(this)
+        );
+        $(this.$sidebarReact).off(
+            "click",
+            ".deleteItemSidebar",
+            this.onDeleteItemSidebar.bind(this)
+        );
     }
 
     // Load grid items
     loadGrid() {
-        this.$gridReact1 = $(this.gridReact).data("gridstack");
+        const grid = this.$gridReact.data("gridstack");
         const items = this.state.itemsGrid;
         items.forEach(item => {
-            this.$gridReact1.addWidget(
+            grid.addWidget(
                 ReactDOMServer.renderToStaticMarkup(<ItemGrid item={item} />),
                 item.x,
                 item.y,
@@ -91,7 +168,7 @@ export default class App extends Component {
                 item.height,
                 false
             );
-        }, this.$gridReact1);
+        }, grid);
     }
 
     // Load sidebar items
@@ -103,8 +180,6 @@ export default class App extends Component {
                 <ItemGrid item={item} />
             );
         });
-        // Load element
-        this.$sidebarReact = $(this.sidebarReact);
         // Remove all children of the sidebar
         this.$sidebarReact.children().remove();
         // Load new elements sidebar
@@ -113,83 +188,18 @@ export default class App extends Component {
         this.dragSidebar();
     }
 
-    // event drag drop from sidebar to grid
+    // Event drag drop from sidebar to grid
     dragSidebar() {
-        this.$sidebarReact = $(this.sidebarReact);
-
         this.$sidebarReact.children().draggable({
             revert: "invalid",
             handle: ".grid-stack-item-content",
             scroll: false,
-            appendTo: "body",
-            start: () => {
-                this.$sidebarReact.removeClass("sidebar-scroll");
-            },
-            stop: () => {
-                this.$sidebarReact.addClass("sidebar-scroll");
-            }
+            appendTo: "body"
         });
     }
 
-    componentDidMount() {
-        // Load element grid
-        this.$gridReact = $(this.gridReact);
-        // Load element sidebar
-        this.$sidebarReact = $(this.sidebarReact);
-
-        const gridStack = $("#grid1").gridstack({
-            disableOneColumnMode: true,
-            height: 6,
-            width: 4,
-            acceptWidgets: ".grid-stack-item",
-            float: true,
-            verticalMargin: 20,
-            cellHeight: 40,
-            alwaysShowResizeHandle: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-                navigator.userAgent
-            )
-        });
-        let numberOfRows = 6;
-
-        let minHeight = numberOfRows * 40 + (numberOfRows - 1) * 20;
-        $("#grid1").css({ "min-height": minHeight });
-
-        this.loadGrid();
-        this.loadSidebar();
-
-        this.$gridReact.on("change", this.onChange.bind(this));
-        this.$gridReact.on("added", this.onAddGridFromSidebar.bind(this));
-        this.$gridReact.on(
-            "click",
-            ".removeItemGrid",
-            { gridStack },
-            this.onRemoveItemGrid.bind(this)
-        );
-        this.$sidebarReact.on(
-            "click",
-            ".deleteItemSidebar",
-            this.onDeleteItemSidebar.bind(this)
-        );
-    }
-
-    componentWillUnmount() {
-        $(this.gridReact).on("change", this.onChange.bind(this));
-        $(this.gridReact).on("added", this.onAddGridFromSidebar.bind(this));
-        $(this.gridReact).on(
-            "click",
-            ".removeItemGrid",
-            {},
-            this.onRemoveItemGrid.bind(this)
-        );
-        $(this.$sidebarReact).on(
-            "click",
-            ".deleteItemSidebar",
-            this.onDeleteItemSidebar.bind(this)
-        );
-    }
-
-    // catch the change
-    // itens necessary change because a update can change many box
+    // Catch the changes
+    // It is necessary it because it can change many box in an unique moving
     onChange(e, items) {
         if (items === undefined) {
             return false;
@@ -202,7 +212,7 @@ export default class App extends Component {
     updateItemGrid(item) {
         const id = item.id === undefined ? item.el[0].id : item.id;
 
-        const itemsGrid = [...this.state.itemsGrid];
+        const itemsGrid = this.state.itemsGrid;
 
         const index = itemsGrid.map(item => item.id).indexOf(id);
         itemsGrid[index].x = item.x;
@@ -215,9 +225,19 @@ export default class App extends Component {
         this.saveStorage();
     }
 
-    // From sidebar to grid
+    // Add item from sidebar to grid
     onAddGridFromSidebar(e, items) {
         const id = items[0].el[0].id;
+
+        this.$sidebarReact.addClass("sidebar-scroll");
+
+        if (items[0].y > this.optionsGrid.height - 1) {
+            const el = document.getElementById(id);
+            this.$gridReact.data("gridstack").removeWidget(el);
+            this.loadSidebar();
+            return false;
+        }
+
         const itemsSidebar = [...this.state.itemsSidebar];
 
         const index = itemsSidebar.map(item => item.id).indexOf(id);
@@ -228,15 +248,18 @@ export default class App extends Component {
             itemsSidebar,
             itemsGrid: [...prevState.itemsGrid, itemGrid]
         }));
+
+        this.loadSidebar();
+        this.saveStorage();
     }
 
-    // From grid to sidebar
+    // Remove item from grid to sidebar
     onRemoveItemGrid(e) {
         const id = e.target.parentElement.parentElement.parentElement.id;
 
         // Remove item from grid by dom
-        const el = document.getElementById(id);
-        this.$gridReact.data("gridstack").removeWidget(el);
+        const elementItem = document.getElementById(id);
+        this.$gridReact.data("gridstack").removeWidget(elementItem);
 
         // Update state
         const itemsGrid = this.state.itemsGrid;
@@ -249,16 +272,22 @@ export default class App extends Component {
             itemsSidebar: [...prevState.itemsSidebar, itemsSidebar],
             itemsGrid
         }));
+
+        this.loadSidebar();
+        this.saveStorage();
     }
 
     onDeleteItemSidebar(e) {
         const id = e.target.parentElement.parentElement.parentElement.id;
-        const itemsSidebar = [...this.state.itemsSidebar];
+        const itemsSidebar = this.state.itemsSidebar;
 
         const index = itemsSidebar.map(item => item.id).indexOf(id);
         itemsSidebar.splice(index, 1);
 
         this.setState({ itemsSidebar });
+
+        this.loadSidebar();
+        this.saveStorage();
     }
 
     onAddSidebar() {
@@ -266,19 +295,7 @@ export default class App extends Component {
         const item = { id, name: `Drag ${id}` };
         const itemsSidebar = [...this.state.itemsSidebar, item];
         this.setState({ itemsSidebar });
-    }
 
-    shouldComponentUpdate(nextProps, nextState) {
-        if (
-            this.state.itemsSidebar.length !== nextState.itemsSidebar.length ||
-            this.state.itemsGrid.length !== nextState.itemsGrid.length
-        ) {
-            return true;
-        }
-        return false;
-    }
-
-    componentDidUpdate() {
         this.loadSidebar();
         this.saveStorage();
     }
@@ -356,7 +373,6 @@ export default class App extends Component {
                     <div className="row">
                         <div className="col-xs-12 col-sm-12 col-md-3 col-lg-2 bg-warning px-0">
                             {/* Sidebar */}
-
                             <button
                                 type="button"
                                 className="btn btn-primary btn-block green"
@@ -382,9 +398,6 @@ export default class App extends Component {
                             <div className="col-md-4 offset-md-4">
                                 <div
                                     className="grid-stack grid-stack-4"
-                                    data_gridstack_node='{"width":"1"}'
-                                    data-_gridstack_node='{"width":"1"}'
-                                    id="grid1"
                                     ref={gridReact =>
                                         (this.gridReact = gridReact)
                                     }
@@ -404,7 +417,6 @@ class ItemGrid extends Component {
             <div
                 id={this.props.item.id}
                 className="grid-stack-item"
-                data-_gridstack_node='{"width":1, "height":1}'
                 data-gs-id={this.props.item.id}
             >
                 <div className="grid-stack-item-content" style={styleImgDiv}>
