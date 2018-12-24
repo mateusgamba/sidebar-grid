@@ -245,6 +245,90 @@ The this.loadGrid() and this.loadSidebar() call the methods to load the items.
 
 After, it is attaches event handlers for grid, the gridstack has some events, you can access [doc](https://github.com/gridstack/gridstack.js/tree/develop/doc#events) to know all events.
 
-For this tutorial only are used change and added. change is used to adding/removing items or existing items change their position/size. And the added is used to add item from sidebar to grid.
+For this tutorial is used change and added events. The Change is used to adding/removing items or existing items change their position/size. And the added is used to add item from sidebar to grid.
 
-The two other events are responsibles for remove item from grid and sidebar.
+After, it has click event with .removeItemGrid class selector that it is only executed when clicked in a class that have .removeItemGrid class. in other words when clicked in .removeItemGrid link will be remove item from grid.
+The same occur with .deleteItemSidebar click sidebar, but it delete from sidebar.
+
+The next componentWillUnmount method used to cleaning up of DOM elements.
+
+```javascript
+componentWillUnmount() {
+    $(this.gridReact).on("change", this.onChange.bind(this));
+    $(this.gridReact).on("added", this.onAddGridFromSidebar.bind(this));
+    $(this.gridReact).on(
+        "click",
+        ".removeItemGrid",
+        this.onRemoveItemGrid.bind(this)
+    );
+    $(this.$sidebarReact).on(
+        "click",
+        ".deleteItemSidebar",
+        this.onDeleteItemSidebar.bind(this)
+    );
+}
+```
+
+For load the items on grid is used the follow code:
+
+```javascript
+loadGrid() {
+    const grid = this.$gridReact.data("gridstack");
+    const items = this.state.itemsGrid;
+    items.forEach(item => {
+        grid.addWidget(
+            ReactDOMServer.renderToStaticMarkup(
+                <ItemGrid item={item} />
+            ),
+            item.x,
+            item.y,
+            item.width,
+            item.height,
+            false
+        );
+    }, grid);
+}
+```
+
+The addWidget is used to create new item. The addWidget has eight parameters, you can [see](https://github.com/gridstack/gridstack.js/tree/develop/doc#addwidgetel-x-y-width-height-autoposition-minwidth-maxwidth-minheight-maxheight-id). But it will be only 6 parameters:
+
+-   el - item html
+-   x, y, width, height - widget position/dimensions (optional)
+-   autoPosition - if true then x, y parameters will be ignored and widget will be places on the first available position (optional)
+
+The parameter first I'm using ReactDOMServer.renderToStaticMarkup to receives JSX from component and returns clean and escaped html in string, because the render is make for jQuery.
+
+for load the items in sidebar, it is used the method:
+
+```javascript
+loadSidebar() {
+    // Load state
+    const itemsSidebar = this.state.itemsSidebar;
+    const items = itemsSidebar.map(item => {
+        return ReactDOMServer.renderToStaticMarkup(
+            <ItemGrid item={item} />
+        );
+    });
+    // Remove all children of the sidebar
+    this.$sidebarReact.children().remove();
+    // Load new elements sidebar
+    this.$sidebarReact.prepend(items);
+    // Re-load sidebar functionalities
+    this.dragSidebar();
+}
+```
+
+That method just load data from state to jQuery function and it is used the same process of render (ReactDOMServer.renderToStaticMarkup). After, it is delete all item and added again. It is call the method this.dragSidebar that enable draggable functionality from sidebar to grid.
+
+The this.draggable has follow code:
+
+```javascript
+dragSidebar() {
+    this.$sidebarReact.children().draggable({
+        revert: "invalid",
+        handle: ".grid-stack-item-content",
+        scroll: false,
+        appendTo: "body"
+    });
+}
+```

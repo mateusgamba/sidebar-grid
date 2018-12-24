@@ -79,23 +79,18 @@ export default class App extends Component {
 
     // Load grid items
     loadGrid() {
-        this.$gridReact = $(this.gridReact);
+        const grid = this.$gridReact.data("gridstack");
         const items = this.state.itemsGrid;
         items.forEach(item => {
-            const widget = ReactDOMServer.renderToStaticMarkup(
-                <ItemGrid
-                    item={item}
-                    minWidth="2"
-                    maxWidth="4"
-                    minHeight="2"
-                    maxHeight="4"
-                />
+            grid.addWidget(
+                ReactDOMServer.renderToStaticMarkup(<ItemGrid item={item} />),
+                item.x,
+                item.y,
+                item.width,
+                item.height,
+                false
             );
-
-            this.$gridReact.append(widget);
-            const grid = this.$gridReact.data("gridstack");
-            grid.makeWidget(document.getElementById(item.id));
-        }, this.$gridReact);
+        }, grid);
     }
 
     // Load sidebar items
