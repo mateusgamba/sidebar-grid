@@ -79,12 +79,25 @@ export default class App extends Component {
 
         this.optionsGrid = {
             disableOneColumnMode: true,
-            height: 6,
-            width: 4,
-            acceptWidgets: true,
+            height: 2,
+            width: 2,
+            acceptWidgets: ".grid-stack-item",
             float: true,
             verticalMargin: 20,
-            cellHeight: 40,
+            cellHeight: 200,
+            alwaysShowResizeHandle: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+                navigator.userAgent
+            )
+        };
+
+        this.optionsGrid1 = {
+            disableOneColumnMode: true,
+            height: 1,
+            width: 1,
+            acceptWidgets: ".grid-stack-item",
+            float: true,
+            verticalMargin: 20,
+            cellHeight: 200,
             alwaysShowResizeHandle: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
                 navigator.userAgent
             )
@@ -96,16 +109,22 @@ export default class App extends Component {
             this.optionsGrid.height * this.optionsGrid.cellHeight +
             (this.optionsGrid.height - 1) * this.optionsGrid.verticalMargin;
         this.$gridReact.css({ "min-height": minHeight });
+        this.$gridReact1.css({ "min-height": "400px" });
     }
 
     componentDidMount() {
         // Load element grid
         this.$gridReact = $(this.gridReact);
+        this.$gridReact1 = $(this.gridReact1);
         // Load element sidebar
         this.$sidebarReact = $(this.sidebarReact);
 
+        console.log(this.$gridReact);
+        console.log(this.$gridReact1);
         //build grid
         this.$gridReact.gridstack(this.optionsGrid);
+        this.$gridReact1.gridstack(this.optionsGrid1);
+        this.$gridReact1.data("gridstack");
 
         // Define minHeight grid
         this.setMinHeightGrid();
@@ -127,19 +146,55 @@ export default class App extends Component {
             this.onDeleteItemSidebar.bind(this)
         );
         this.$sidebarReact.on("dragstart", this.onDragStartSidebar.bind(this));
+        // this.$sidebarReact.on("drag", (e, ui) => {
+        //     const id = ui.helper[0].id;
+        //     console.log(ui);
+        //     ui.helper.data("gs-width", "2");
+        //     if (parseInt(ui.offset.top, 10) > 270) {
+        //         setTimeout(function() {
+        //             const id = ui.helper[0].id;
+        //             const elementItem = document.getElementById(id);
+
+        //             elementItem.setAttribute(
+        //                 "data-_gridstack_node",
+        //                 JSON.stringify({
+        //                     width: 2,
+        //                     height: 1
+        //                 })
+        //             );
+        //             $("#" + id).attr("data-gs-width", "2");
+        //             $("#" + id).css("width", "400px");
+        //         }, 3000);
+        //     } else {
+        //         const id = ui.helper[0].id;
+        //         const elementItem = document.getElementById(id);
+
+        //         elementItem.setAttribute(
+        //             "data-_gridstack_node",
+        //             JSON.stringify({
+        //                 width: 1,
+        //                 height: 1
+        //             })
+        //         );
+        //         $("#" + id).attr("data-gs-width", "1");
+        //     }
+        // });
     }
 
     onDragStartSidebar(event, ui) {
-        const id = ui.helper[0].id;
-        const elementItem = document.getElementById(id);
+        //console.log(event);
         this.$sidebarReact.removeClass("sidebar-scroll");
-        elementItem.setAttribute(
-            "data-_gridstack_node",
-            JSON.stringify({
-                width: 1,
-                height: 1
-            })
-        );
+
+        // const id = ui.helper[0].id;
+        // const elementItem = document.getElementById(id);
+
+        // elementItem.setAttribute(
+        //     "data-_gridstack_node",
+        //     JSON.stringify({
+        //         width: 2,
+        //         height: 1
+        //     })
+        // );
     }
 
     componentWillUnmount() {
@@ -155,6 +210,7 @@ export default class App extends Component {
             ".deleteItemSidebar",
             this.onDeleteItemSidebar.bind(this)
         );
+        this.$sidebarReact.off("dragstart", this.onDragStartSidebar.bind(this));
     }
 
     // Load grid items
@@ -162,14 +218,16 @@ export default class App extends Component {
         const grid = this.$gridReact.data("gridstack");
         const items = this.state.itemsGrid;
         items.forEach(item => {
-            grid.addWidget(
-                renderToStaticMarkup(<ItemGrid item={item} />),
-                item.x,
-                item.y,
-                item.width,
-                item.height,
-                false
-            );
+            if (item !== null) {
+                grid.addWidget(
+                    renderToStaticMarkup(<ItemGrid item={item} />),
+                    item.x,
+                    item.y,
+                    item.width,
+                    item.height,
+                    false
+                );
+            }
         }, grid);
     }
 
@@ -178,7 +236,9 @@ export default class App extends Component {
         // Load state
         const itemsSidebar = this.state.itemsSidebar;
         const items = itemsSidebar.map(item => {
-            return renderToStaticMarkup(<ItemGrid item={item} />);
+            if (item !== null) {
+                return renderToStaticMarkup(<ItemGrid item={item} />);
+            }
         });
         // Remove all children of the sidebar
         this.$sidebarReact.children().remove();
@@ -190,6 +250,7 @@ export default class App extends Component {
 
     // Event drag drop from sidebar to grid
     dragSidebar() {
+        var teste = "0";
         this.$sidebarReact.children().draggable({
             revert: "invalid",
             handle: ".grid-stack-item-content",
@@ -214,7 +275,12 @@ export default class App extends Component {
 
         const itemsGrid = this.state.itemsGrid;
 
-        const index = itemsGrid.map(item => item.id).indexOf(id);
+        const index = itemsGrid
+            .map(item => {
+                console.log(item);
+                return item !== null && item !== undefined ? item.id : false;
+            })
+            .indexOf(id);
         itemsGrid[index].x = item.x;
         itemsGrid[index].y = item.y;
         itemsGrid[index].width = item.width;
@@ -230,6 +296,8 @@ export default class App extends Component {
         const id = items[0].el[0].id;
 
         this.$sidebarReact.addClass("sidebar-scroll");
+
+        const el = document.getElementById(id);
 
         if (items[0].y > this.optionsGrid.height - 1) {
             const el = document.getElementById(id);
@@ -395,13 +463,62 @@ export default class App extends Component {
                             style={fullImg}
                         >
                             {/* Grid */}
-                            <div className="col-md-4 offset-md-4">
+                            <div className="row">
+                                <div className="col-md-4 offset-md-4">
+                                    <div
+                                        className="grid-stack grid-stack-2 col-12"
+                                        ref={gridReact =>
+                                            (this.gridReact = gridReact)
+                                        }
+                                        id="grid1"
+                                    >
+                                        <div className="row">
+                                            <div
+                                                className="col-6"
+                                                style={{
+                                                    border: "1px solid black",
+                                                    minHeight: "200px"
+                                                }}
+                                            >
+                                                &nbsp;
+                                            </div>
+                                            <div
+                                                className="col-6"
+                                                style={{
+                                                    border: "1px solid black",
+                                                    minHeight: "200px"
+                                                }}
+                                            >
+                                                &nbsp;
+                                            </div>
+                                            <div
+                                                className="col-12 box-horizontal"
+                                                id="horizontal"
+                                                style={{
+                                                    border: "1px solid black",
+                                                    minHeight: "200px"
+                                                }}
+                                            >
+                                                &nbsp;
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div
-                                    className="grid-stack grid-stack-4"
-                                    ref={gridReact =>
-                                        (this.gridReact = gridReact)
-                                    }
-                                />
+                                    className="col-md-2"
+                                    style={{
+                                        border: "1px solid black",
+                                        minHeight: "400px"
+                                    }}
+                                >
+                                    <div
+                                        className="grid-stack grid-stack-1"
+                                        id="grid2"
+                                        ref={gridReact1 =>
+                                            (this.gridReact1 = gridReact1)
+                                        }
+                                    />
+                                </div>
                             </div>
                         </div>
                     </div>

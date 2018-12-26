@@ -100,3 +100,7 @@ body {
         text-align: center;
     }
 }
+
+#grid2 .grid-stack-item {
+    height: 100% !important;
+}
