@@ -318,7 +318,7 @@ loadSidebar() {
 }
 ```
 
-That method just load data from state to jQuery function and it is used the same process of render (ReactDOMServer.renderToStaticMarkup). After, it is delete all item and added again. It is call the method this.dragSidebar that enable draggable functionality from sidebar to grid.
+That method just data load from state to jQuery function and it is used the same process of render (ReactDOMServer.renderToStaticMarkup). After, it is delete all item and added again. It is call the method this.dragSidebar that enable draggable functionality from sidebar to grid.
 
 The this.draggable has follow code:
 
@@ -332,3 +332,54 @@ dragSidebar() {
     });
 }
 ```
+
+The dragSidebar method has functanality of sidebar drag and drop. it is used this.\$sidebarReact.children() because it is necessary all items from sidebar has the drag and drop. The parameters are used to:
+
+-   revert: for item return to sidebar if the item has not been dropped on a droppable.
+-   handle: specific the element for the dragging
+-   scroll: container auto-scrolls while dragging.
+-   appendTo: where the draggable helper should be appended to while dragging.
+
+Now, It will be implemented the events
+
+```javascript
+onAddGridFromSidebar(e, items) {
+    const id = items[0].el[0].id;
+    const itemsSidebar = this.state.itemsSidebar;
+
+    const index = itemsSidebar.map(item => item.id).indexOf(id);
+    const itemGrid = itemsSidebar[index];
+    itemsSidebar.splice(index, 1);
+
+    this.setState(prevState => ({
+        itemsSidebar,
+        itemsGrid: [...prevState.itemsGrid, itemGrid]
+    }));
+}
+```
+
+The onAddGridFromSidebar method remove the item from sidebar, itemsSidebar state, and add in the itemsGrid state.
+
+```javascript
+onChange(e, items) {
+    if (items === undefined) {
+        return false;
+    }
+    let id, itemsGrid, index;
+    items.forEach(item => {
+        id = item.id === undefined ? item.el[0].id : item.id;
+
+        itemsGrid = this.state.itemsGrid;
+
+        index = itemsGrid.map(item => item.id).indexOf(id);
+        itemsGrid[index].x = item.x;
+        itemsGrid[index].y = item.y;
+        itemsGrid[index].width = item.width;
+        itemsGrid[index].height = item.height;
+
+        this.setState({ itemsGrid });
+    });
+}
+```
+
+This method onChange catch up the all modification in the items changed. It is necessaring to use forEach for save the colisions change.
