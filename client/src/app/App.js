@@ -226,9 +226,8 @@ export default class App extends Component {
         const el = document.getElementById(id);
         this.$gridReact.data("gridstack").removeWidget(el);
 
-        // Update state
+        // Remove item from state
         const itemsGrid = this.state.itemsGrid;
-
         const index = itemsGrid.map(item => item.id).indexOf(id);
         const itemsSidebar = itemsGrid[index];
         itemsGrid.splice(index, 1);
@@ -237,11 +236,13 @@ export default class App extends Component {
             itemsSidebar: [...prevState.itemsSidebar, itemsSidebar],
             itemsGrid
         }));
+
+        this.loadSidebar();
     }
 
     onDeleteItemSidebar(e) {
         const id = e.target.parentElement.parentElement.parentElement.id;
-        const itemsSidebar = [...this.state.itemsSidebar];
+        const itemsSidebar = this.state.itemsSidebar;
 
         const index = itemsSidebar.map(item => item.id).indexOf(id);
         itemsSidebar.splice(index, 1);

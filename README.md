@@ -383,3 +383,50 @@ onChange(e, items) {
 ```
 
 This method onChange catch up the all modification in the items changed. It is necessaring to use forEach for save the colisions change.
+
+The two last methods from events are onRemoveItemGrid and onDeleteItemSidebar.
+
+The onRemoveItemGrid remove the item from grid and add in state of the sidebar. In the end of method is executed the loadSidebar() to re-load the drag and drop events of the jQuery
+
+```javascript
+onRemoveItemGrid(e) {
+    const id = e.target.parentElement.parentElement.parentElement.id;
+
+    // Remove item from grid by dom
+    const el = document.getElementById(id);
+    this.$gridReact.data("gridstack").removeWidget(el);
+
+    // Remove item from state
+    const itemsGrid = this.state.itemsGrid;
+    const index = itemsGrid.map(item => item.id).indexOf(id);
+    const itemsSidebar = itemsGrid[index];
+    itemsGrid.splice(index, 1);
+
+    this.setState(prevState => ({
+        itemsSidebar: [...prevState.itemsSidebar, itemsSidebar],
+        itemsGrid
+    }));
+
+    this.loadSidebar();
+}
+```
+
+The onDeleteItemSidebar method just remove the item from sidebar.
+
+```javascript
+onDeleteItemSidebar(e) {
+    const id = e.target.parentElement.parentElement.parentElement.id;
+    const itemsSidebar = this.state.itemsSidebar;
+
+    const index = itemsSidebar.map(item => item.id).indexOf(id);
+    itemsSidebar.splice(index, 1);
+
+    this.setState({ itemsSidebar });
+}
+```
+
+This tutorial show the basic of the drag and drop with sidebar using react. Unhappy it is necessary use jQuery.
+
+I hope have to helped you.
+
+Thanks
