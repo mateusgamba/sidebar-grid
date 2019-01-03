@@ -33,20 +33,26 @@ export default class App extends Component {
 
         let itemsGrid = [
             {
-                x: 0,
-                y: 0,
-                width: 2,
-                height: 2,
-                id: "a",
-                name: "Item a"
+                id: 1,
+                item: {
+                    x: 0,
+                    y: 0,
+                    width: 1,
+                    height: 1,
+                    id: "a",
+                    name: "Item a"
+                }
             },
             {
-                x: 2,
-                y: 0,
-                width: 2,
-                height: 2,
-                id: "b",
-                name: "Item b"
+                id: 2,
+                item: {
+                    x: 0,
+                    y: 0,
+                    width: 1,
+                    height: 1,
+                    id: "b",
+                    name: "Item b"
+                }
             }
         ];
 
@@ -95,25 +101,27 @@ export default class App extends Component {
         const minHeight =
             this.optionsGrid.height * this.optionsGrid.cellHeight +
             (this.optionsGrid.height - 1) * this.optionsGrid.verticalMargin;
-        // this.$gridReact.css({ "min-height": minHeight });
-        // this.$gridReact1.css({ "min-height": minHeight });
-        // this.$gridReact2.css({ "min-height": minHeight });
+        this.$gridReact1.css({ "min-height": minHeight });
+        this.$gridReact2.css({ "min-height": minHeight });
+        this.$gridReact3.css({ "min-height": minHeight });
     }
 
     componentDidMount() {
         // Load element grid
-        this.$gridReact = $(this.gridReact);
         this.$gridReact1 = $(this.gridReact1);
         this.$gridReact2 = $(this.gridReact2);
+        this.$gridReact3 = $(this.gridReact3);
+
         // Load element sidebar
         this.$sidebarReact = $(this.sidebarReact);
 
         //build grid
-        this.$gridReact.gridstack(this.optionsGrid);
         this.$gridReact1.gridstack(this.optionsGrid);
         this.$gridReact2.gridstack(this.optionsGrid);
+        this.$gridReact3.gridstack(this.optionsGrid);
         this.$gridReact1.data("gridstack");
         this.$gridReact2.data("gridstack");
+        this.$gridReact3.data("gridstack");
 
         // Define minHeight grid
         this.setMinHeightGrid();
@@ -121,9 +129,10 @@ export default class App extends Component {
         this.loadGrid();
         this.loadSidebar();
 
-        this.$gridReact.on("change", this.onChange.bind(this));
-        this.$gridReact.on("added", this.onAddGridFromSidebar.bind(this));
-        this.$gridReact.on(
+        this.$gridReact1.on("change", this.onChange.bind(this));
+        this.$gridReact1.on("added", this.onAddGridFromSidebar.bind(this));
+        this.$gridReact3.on("added", this.onAddGridFromSidebar3.bind(this));
+        this.$gridReact1.on(
             "click",
             ".removeItemGrid",
             this.onRemoveItemGrid.bind(this)
@@ -140,22 +149,22 @@ export default class App extends Component {
     onDragStartSidebar(event, ui) {
         this.$sidebarReact.removeClass("sidebar-scroll");
 
-        const id = ui.helper[0].id;
-        const elementItem = document.getElementById(id);
+        // const id = ui.helper[0].id;
+        // const elementItem = document.getElementById(id);
 
-        elementItem.setAttribute(
-            "data-_gridstack_node",
-            JSON.stringify({
-                width: 1,
-                height: 1
-            })
-        );
+        // elementItem.setAttribute(
+        //     "data-_gridstack_node",
+        //     JSON.stringify({
+        //         width: 1,
+        //         height: 1
+        //     })
+        // );
     }
 
     componentWillUnmount() {
-        $(this.gridReact).off("change", this.onChange.bind(this));
-        $(this.gridReact).off("added", this.onAddGridFromSidebar.bind(this));
-        $(this.gridReact).off(
+        $(this.gridReact1).off("change", this.onChange.bind(this));
+        $(this.gridReact1).off("added", this.onAddGridFromSidebar.bind(this));
+        $(this.gridReact1).off(
             "click",
             ".removeItemGrid",
             this.onRemoveItemGrid.bind(this)
@@ -165,31 +174,48 @@ export default class App extends Component {
             ".deleteItemSidebar",
             this.onDeleteItemSidebar.bind(this)
         );
-        this.$sidebarReact.off("dragstart", this.onDragStartSidebar.bind(this));
+        // this.$sidebarReact.off("dragstart", this.onDragStartSidebar.bind(this));
     }
 
     // Load grid items
     loadGrid() {
-        const grid = this.$gridReact.data("gridstack");
+        let grid,
+            item = {},
+            itemGrid = {};
+
         const items = this.state.itemsGrid;
-        items.forEach(item => {
-            if (item !== null) {
-                grid.addWidget(
-                    renderToStaticMarkup(<ItemGrid item={item} />),
-                    item.x,
-                    item.y,
-                    item.width,
-                    item.height,
-                    false
-                );
+
+        for (let i = 1; i <= 3; i++) {
+            itemGrid = this.getItem(items, i);
+
+            if (itemGrid === null) {
+                continue;
             }
-        }, grid);
+            item = itemGrid.item;
+            if (itemGrid.id === 1) {
+                grid = this.$gridReact1.data("gridstack");
+            } else if (itemGrid.id === 2) {
+                grid = this.$gridReact2.data("gridstack");
+            } else {
+                grid = this.$gridReact3.data("gridstack");
+            }
+
+            grid.addWidget(
+                renderToStaticMarkup(<ItemGrid item={item} />),
+                item.x,
+                item.y,
+                item.width,
+                item.height,
+                false
+            );
+        }
     }
 
     // Load sidebar items
     loadSidebar() {
         // Load state
         const itemsSidebar = this.state.itemsSidebar;
+
         const items = itemsSidebar.map(item => {
             if (item !== null) {
                 return renderToStaticMarkup(<ItemGrid item={item} />);
@@ -220,31 +246,31 @@ export default class App extends Component {
         if (items === undefined) {
             return false;
         }
-        items.forEach(item => {
-            this.updateItemGrid(item);
-        });
+        //console.log(items);
+        // items.forEach(item => {
+        //     this.updateItemGrid(item);
+        // });
     }
 
-    updateItemGrid(item) {
-        const id = item.id === undefined ? item.el[0].id : item.id;
+    // updateItemGrid(item) {
+    //     const id = item.id === undefined ? item.el[0].id : item.id;
 
-        const itemsGrid = this.state.itemsGrid;
+    //     const itemsGrid = this.state.itemsGrid;
 
-        const index = itemsGrid
-            .map(item => {
-                console.log(item);
-                return item !== null && item !== undefined ? item.id : false;
-            })
-            .indexOf(id);
-        itemsGrid[index].x = item.x;
-        itemsGrid[index].y = item.y;
-        itemsGrid[index].width = item.width;
-        itemsGrid[index].height = item.height;
+    //     const index = itemsGrid
+    //         .map(item => {
+    //             return item !== null && item !== undefined ? item.id : false;
+    //         })
+    //         .indexOf(id);
+    //     itemsGrid[index].x = item.x;
+    //     itemsGrid[index].y = item.y;
+    //     itemsGrid[index].width = item.width;
+    //     itemsGrid[index].height = item.height;
 
-        this.setState({ itemsGrid });
+    //     this.setState({ itemsGrid });
 
-        this.saveStorage();
-    }
+    //     this.saveStorage();
+    // }
 
     // Add item from sidebar to grid
     onAddGridFromSidebar(e, items) {
@@ -261,10 +287,10 @@ export default class App extends Component {
             return false;
         }
 
-        const itemsSidebar = [...this.state.itemsSidebar];
+        const itemsSidebar = this.state.itemsSidebar;
 
         const index = itemsSidebar.map(item => item.id).indexOf(id);
-        const itemGrid = itemsSidebar[index];
+        const itemGrid = { id: 1, item: itemsSidebar[index] };
         itemsSidebar.splice(index, 1);
 
         this.setState(prevState => ({
@@ -276,21 +302,26 @@ export default class App extends Component {
         this.saveStorage();
     }
 
+    onAddGridFromSidebar3(e, items) {
+        const id = items[0].el[0].id;
+
+        console.log(id);
+    }
+
     // Remove item from grid to sidebar
     onRemoveItemGrid(e) {
+        console.log("remove");
         const id = e.target.parentElement.parentElement.parentElement.id;
 
         // Remove item from grid by dom
         const elementItem = document.getElementById(id);
-        this.$gridReact.data("gridstack").removeWidget(elementItem);
+        this.$gridReact1.data("gridstack").removeWidget(elementItem);
 
-        // Update state
         const itemsGrid = this.state.itemsGrid;
 
-        const index = itemsGrid.map(item => item.id).indexOf(id);
-        const itemsSidebar = itemsGrid[index];
+        const index = itemsGrid.map(item => item.id).indexOf(1);
+        const itemsSidebar = itemsGrid[index].item;
         itemsGrid.splice(index, 1);
-
         this.setState(prevState => ({
             itemsSidebar: [...prevState.itemsSidebar, itemsSidebar],
             itemsGrid
@@ -343,6 +374,11 @@ export default class App extends Component {
         if (global.localStorage) {
             global.localStorage.setItem("photo-grid", JSON.stringify(data));
         }
+    }
+
+    getItem(items, id) {
+        const index = items.map(item => item.id).indexOf(id);
+        return index > -1 ? items[index] : null;
     }
 
     render() {
@@ -429,8 +465,8 @@ export default class App extends Component {
                                         >
                                             <div
                                                 className="grid-stack grid-stack-1 photo-portrait"
-                                                ref={gridReact =>
-                                                    (this.gridReact = gridReact)
+                                                ref={gridReact1 =>
+                                                    (this.gridReact1 = gridReact1)
                                                 }
                                                 id="grid1"
                                             />
@@ -445,8 +481,8 @@ export default class App extends Component {
                                             <div
                                                 className="grid-stack grid-stack-1 photo-portrait"
                                                 id="grid2"
-                                                ref={gridReact1 =>
-                                                    (this.gridReact1 = gridReact1)
+                                                ref={gridReact2 =>
+                                                    (this.gridReact2 = gridReact2)
                                                 }
                                             />
                                         </div>
@@ -460,9 +496,9 @@ export default class App extends Component {
                                         >
                                             <div
                                                 className="grid-stack grid-stack-1 photo-landscape"
-                                                id="grid2"
-                                                ref={gridReact1 =>
-                                                    (this.gridReact1 = gridReact1)
+                                                id="grid3"
+                                                ref={gridReact3 =>
+                                                    (this.gridReact3 = gridReact3)
                                                 }
                                             />
                                         </div>
