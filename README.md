@@ -430,3 +430,9 @@ This tutorial show the basic of the drag and drop with sidebar using react. Unha
 I hope have to helped you.
 
 Thanks
+
+https://mobiforge.com/design-development/touch-friendly-drag-and-drop
+
+https://codepen.io/nakome/pen/qRWqBe
+
+https://github.com/bevacqua/dragula/issues/61

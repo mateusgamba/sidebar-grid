@@ -1,0 +1,38 @@
+.flexcontainer {
+    display: flex;
+    align-items: center;
+    flex-flow: column wrap;
+    align-content: center;
+    height: 126px;
+}
+
+.flexcontainer > div {
+    background-color: #b93c2f;
+    border: 1px solid #000;
+}
+
+.vertical {
+    height: 61px;
+    width: 40px;
+    .photomask {
+        height: 61px;
+        width: 40px;
+        clip-path: inset(0 0 0 0);
+        img {
+            height: 100%;
+        }
+    }
+}
+
+.horizontal {
+    height: 40px;
+    width: 60px;
+    .photomask {
+        height: 40px;
+        width: 60px;
+        clip-path: inset(0 0 0 0);
+        img {
+            width: 100%;
+        }
+    }
+}

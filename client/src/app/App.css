@@ -1,56 +1,80 @@
-.grid-stack-item-content {
-    color: #2c3e50;
-    text-align: center;
-    background-color: #18bc9c;
+body {
+    background: url("living-room.jpg") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    background-size: cover;
+    -o-background-size: cover;
 }
 
-.sidebar {
-    padding: 25px 0;
-    text-align: center;
+@media (min-width: 768px) {
+    .navbar-brand.abs {
+        position: absolute;
+        width: 100%;
+        left: 0;
+        text-align: center;
+    }
 }
 
-.grid-stack {
-    background: lightgoldenrodyellow;
-}
-
-.sidebar .grid-stack-item {
-    width: 200px;
-    height: 120px;
-    /* border: 2px dashed green; */
-    text-align: center;
-    line-height: 100px;
-    z-index: 10;
-    background: rgba(0, 255, 0, 0.1);
-    cursor: default;
-    display: inline-block;
-    margin-bottom: 5px;
-}
-
-.sidebar .grid-stack-item .grid-stack-item-content {
-    height: 100%;
-    background: none;
-}
-
-.sidebar .grid-stack-item .grid-stack-item-content > p {
-    line-height: normal;
-}
-
-.sidebar .grid-stack-item .grid-stack-item-content .removeItemGrid,
-.grid-stack .grid-stack-item .grid-stack-item-content .deleteItemSidebar {
-    display: none;
-}
-
-.grid-stack {
-    /* background-image: linear-gradient(#e0e0e0 1px, transparent 1px),
-        linear-gradient(90deg, #e0e0e0 1px, transparent 0px),
-        linear-gradient(rgba(255, 255, 255, 0.3) 5px, transparent 100px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.3) 5px, transparent 100px) !important;
-    background-size: 100px 62px, calc(8.33% + 0px) 100px, 20px 20px, 20px 20px !important;
-    background-position: -2px -2px, -1px -2px, -1px -1px, -1px -1px !important; */
-    min-height: 450px;
-}
-
-/* .grid-stack > .grid-stack-item > .grid-stack-item-content {
-    overflow-x: hidden !important;
-    overflow-y: hidden !important;
+/* *,
+*::before,
+*::after {
+    -webkit-box-sizing: content-box;
+    box-sizing: content-box;
 } */
+
+.items {
+    position: relative;
+    width: 50px;
+    display: inline-block;
+    padding-right: 5px;
+    padding-left: 5px;
+}
+
+.thumbnail {
+    height: 5rem;
+}
+
+.thumbnail img {
+    max-height: 100%;
+    max-width: 100%;
+    /* border: 1px solid red; */
+}
+
+.close {
+    position: absolute;
+    line-height: 0.5;
+    right: 0;
+    z-index: 9999;
+}
+
+.gu-mirror {
+    position: fixed !important;
+    margin: 0 !important;
+    z-index: 9999 !important;
+    opacity: 0.8;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
+    filter: alpha(opacity=80);
+    display: block !important;
+    text-align: center !important;
+    overflow: hidden;
+}
+
+.gu-hide {
+    display: none !important;
+}
+
+.gu-unselectable {
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
+}
+
+.gu-transit {
+    opacity: 0.2;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=20)";
+    filter: alpha(opacity=20);
+    background: blue !important;
+    line-height: 1.2em;
+    min-height: 5em;
+}

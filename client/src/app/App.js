@@ -1,28 +1,11 @@
 import React, { Component } from "react";
+import dragula from "react-dragula";
+import "dragula/dist/dragula.css";
 import "bootstrap/dist/css/bootstrap.css";
 import "./App.css";
+import "./grid.scss";
 import $ from "jquery";
-import "gridstack/dist/gridstack";
-import "gridstack/dist/gridstack.jQueryUI";
-import "gridstack/dist/gridstack.css";
-import "gridstack/dist/gridstack-extra.css";
-import ReactDOMServer from "react-dom/server";
 import dogImage from "./dog.jpg";
-import livingImage from "./living-room.jpg";
-
-const styleImgDiv = {
-    backgroundImage: `url(${dogImage})`,
-    backgroundSize: "100% 100%",
-    backgroundRepeat: "no-repeat",
-    objectFit: "cover"
-};
-
-const fullImg = {
-    backgroundImage: `url(${livingImage})`,
-    backgroundPosition: "center",
-    backgroundRepeat: "no-repeat",
-    backgroundSize: "cover"
-};
 
 export default class App extends Component {
     constructor() {
@@ -62,6 +45,33 @@ export default class App extends Component {
             }
         ];
 
+        const sidebarItems = [
+            {
+                id: "item-1",
+                img:
+                    "https://3.bp.blogspot.com/-gA3KvKhA-8w/USVEdAiWi6I/AAAAAAAAA58/btNKJqIkXHc/s320/pieza1.jpg"
+            },
+            {
+                id: "item-2",
+                img:
+                    "https://1.bp.blogspot.com/-daD5d1V4ct4/USVEdAGqdDI/AAAAAAAAA50/XXo8rBlTGpQ/s320/pieza2.jpg"
+            },
+            {
+                id: "item-3",
+                img:
+                    "https://1.bp.blogspot.com/-8LurPyhzlD4/USVEdAH-KJI/AAAAAAAAA54/INQRSWmH79k/s320/pieza3.jpg"
+            },
+            {
+                id: "item-4",
+                img:
+                    "https://4.bp.blogspot.com/-2R3yc2Kggvo/USVEd9UUR5I/AAAAAAAAA6A/YBxpgYG15NI/s320/pieza4.jpg"
+            }
+        ];
+
+        this.state = {
+            sidebarItems
+        };
+
         const data = this.getStorage();
 
         if (data !== null) {
@@ -71,205 +81,113 @@ export default class App extends Component {
 
         this.state = {
             itemsGrid,
-            itemsSidebar
+            itemsSidebar,
+            sidebarItems
         };
+
+        this.showAlert = this.showAlert.bind(this);
 
         // this.onAddSidebar = this.onAddSidebar.bind(this);
     }
 
-    // Load grid items
-    loadGrid() {
-        const grid = this.$gridReact.data("gridstack");
-        const items = this.state.itemsGrid;
-        items.forEach(item => {
-            grid.addWidget(
-                ReactDOMServer.renderToStaticMarkup(<ItemGrid item={item} />),
-                item.x,
-                item.y,
-                item.width,
-                item.height,
-                false
-            );
-        }, grid);
-    }
-
-    // Load sidebar items
-    loadSidebar() {
-        // Load state
-        const itemsSidebar = [...this.state.itemsSidebar];
-        const items = itemsSidebar.map(item => {
-            return ReactDOMServer.renderToStaticMarkup(
-                <ItemGrid
-                    item={item}
-                    minWidth="2"
-                    maxWidth="4"
-                    minHeight="2"
-                    maxHeight="4"
-                />
-            );
-        });
-        // Load element
-        this.$sidebarReact = $(this.sidebarReact);
-        // Remove all children of the sidebar
-        this.$sidebarReact.children().remove();
-        // Load new elements sidebar
-        this.$sidebarReact.prepend(items);
-        // Re-load sidebar functionalities
-        this.dragSidebar();
-    }
-
-    // event drag drop from sidebar to grid
-    dragSidebar() {
-        this.$sidebarReact = $(this.sidebarReact);
-        this.$sidebarReact.children().draggable({
-            revert: "invalid",
-            handle: ".grid-stack-item-content",
-            scroll: false,
-            appendTo: "body"
-        });
-    }
-
     componentDidMount() {
-        // Load element grid
-        this.$gridReact = $(this.gridReact);
-        // Load element sidebar
-        this.$sidebarReact = $(this.sidebarReact);
-
-        const options = {
-            width: 12,
-            height: 6,
-            acceptWidgets: true,
-            float: true
+        let options = {
+            isContainer: function(el) {
+                return false;
+            },
+            moves: function(el, source, handle, sibling) {
+                return true;
+            },
+            accepts: function(el, target, source, sibling) {
+                return (
+                    target.id != "sidebar" &&
+                    document.getElementById(target.id).childElementCount < 1
+                );
+            },
+            invalid: function(el, handle) {
+                return false;
+            },
+            copy: false, // elements are moved by default, not copied
+            copySortSource: true, // elements in copy-source containers can be reordered
+            revertOnSpill: false, // spilling will put the element back where it was dragged from, if this is true
+            removeOnSpill: false, // spilling will `.remove` the element, if this is true
+            mirrorContainer: document.body, // set the element that gets mirror elements appended
+            allowDraggingContainers: false, // lets users drag containers themselves as a whole, disabled by default
+            ignoreInputTextSelection: true // allows users to select input text, see details below
         };
 
-        this.$gridReact.gridstack(options);
+        const sidebar = this.sidebar;
+        const grid1 = this.grid1;
+        const grid2 = this.grid2;
+        const grid3 = this.grid3;
+        const grid4 = this.grid4;
+        const grid5 = this.grid5;
+        const grid6 = this.grid6;
+        const grid7 = this.grid7;
+        const grid8 = this.grid8;
+        const grid9 = this.grid9;
+        const grid10 = this.grid10;
+        const grid11 = this.grid11;
+        const grid12 = this.grid12;
+        const grid13 = this.grid13;
 
-        this.loadGrid();
-        this.loadSidebar();
-
-        this.$gridReact.on("change", this.onChange.bind(this));
-        this.$gridReact.on("added", this.onAddGridFromSidebar.bind(this));
-        this.$gridReact.on(
-            "click",
-            ".removeItemGrid",
-            this.onRemoveItemGrid.bind(this)
+        const drake = dragula(
+            [
+                sidebar,
+                grid1,
+                grid2,
+                grid3,
+                grid4,
+                grid5,
+                grid6,
+                grid7,
+                grid8,
+                grid9,
+                grid10,
+                grid11,
+                grid12,
+                grid13
+            ],
+            options
         );
-        this.$sidebarReact.on(
-            "click",
-            ".deleteItemSidebar",
-            this.onDeleteItemSidebar.bind(this)
-        );
-    }
+        drake.on("drag", function(el, source) {
+            console.log(el);
+            $(el)
+                .children("button")
+                .remove();
 
-    componentWillUnmount() {
-        $(this.gridReact).on("change", this.onChange.bind(this));
-        $(this.gridReact).on("added", this.onAddGridFromSidebar.bind(this));
-        $(this.gridReact).on(
-            "click",
-            ".removeItemGrid",
-            this.onRemoveItemGrid.bind(this)
-        );
-        $(this.$sidebarReact).on(
-            "click",
-            ".deleteItemSidebar",
-            this.onDeleteItemSidebar.bind(this)
-        );
-    }
-
-    // catch the change
-    onChange(e, items) {
-        if (items === undefined) {
-            return false;
-        }
-
-        items.forEach(item => {
-            this.updateItemGrid(item);
+            $(el).addClass("d-inline-block thumbnail m-2 position-relative");
         });
+
+        drake.on("drop", function(el, target, source, sibling) {
+            $(el).removeClass();
+            $(el)
+                .children("button")
+                .remove();
+        });
+        drake.on("out", function(el, target, source, sibling) {
+            $(el).removeClass();
+            $(el)
+                .children("button")
+                .remove();
+        });
+
+        drake.on("over", function(el, target, source) {});
     }
 
-    updateItemGrid(item) {
-        const id = item.id === undefined ? item.el[0].id : item.id;
-
-        const itemsGrid = [...this.state.itemsGrid];
-
-        const index = itemsGrid.map(item => item.id).indexOf(id);
-        itemsGrid[index].x = item.x;
-        itemsGrid[index].y = item.y;
-        itemsGrid[index].width = item.width;
-        itemsGrid[index].height = item.height;
-
-        this.setState({ itemsGrid });
-
-        this.saveStorage();
-    }
-
-    // From sidebar to grid
-    onAddGridFromSidebar(e, items) {
-        const id = items[0].el[0].id;
-        const itemsSidebar = [...this.state.itemsSidebar];
-
-        const index = itemsSidebar.map(item => item.id).indexOf(id);
-        const itemGrid = itemsSidebar[index];
-        itemsSidebar.splice(index, 1);
-
-        this.setState(prevState => ({
-            itemsSidebar,
-            itemsGrid: [...prevState.itemsGrid, itemGrid]
-        }));
-    }
-
-    // From grid to sidebar
-    onRemoveItemGrid(e) {
-        const id = e.target.parentElement.parentElement.parentElement.id;
-
-        // Remove item from grid by dom
-        const el = document.getElementById(id);
-        this.$gridReact.data("gridstack").removeWidget(el);
-
-        // Remove item from state
-        const itemsGrid = this.state.itemsGrid;
-        const index = itemsGrid.map(item => item.id).indexOf(id);
-        const itemsSidebar = itemsGrid[index];
-        itemsGrid.splice(index, 1);
-
-        this.setState(prevState => ({
-            itemsSidebar: [...prevState.itemsSidebar, itemsSidebar],
-            itemsGrid
-        }));
-
-        this.loadSidebar();
-    }
-
-    onDeleteItemSidebar(e) {
-        const id = e.target.parentElement.parentElement.parentElement.id;
-        const itemsSidebar = this.state.itemsSidebar;
-
-        const index = itemsSidebar.map(item => item.id).indexOf(id);
-        itemsSidebar.splice(index, 1);
-
-        this.setState({ itemsSidebar });
-    }
-
-    onAddSidebar() {
+    addImage(e) {
         const id = this.charRandom();
-        const item = { id, name: `Drag ${id}` };
-        const itemsSidebar = [...this.state.itemsSidebar, item];
-        this.setState({ itemsSidebar });
+        const item = {
+            id,
+            img: dogImage
+        };
+        this.setState(prevState => ({
+            sidebarItems: [...prevState.sidebarItems, item]
+        }));
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
-        if (
-            this.state.itemsSidebar.length !== nextState.itemsSidebar.length ||
-            this.state.itemsGrid.length !== nextState.itemsGrid.length
-        ) {
-            return true;
-        }
-        return false;
-    }
-
-    componentDidUpdate() {
-        this.loadSidebar();
-        this.saveStorage();
+    showAlert() {
+        alert(1);
     }
 
     charRandom() {
@@ -295,82 +213,308 @@ export default class App extends Component {
     }
 
     render() {
+        const { sidebarItems } = this.state;
         return (
             <div>
-                <div className="container-fluid">
-                    <h1 className="mb-4">Drag drop from sidebar</h1>
+                <header>
+                    <nav className="navbar navbar-expand-md navbar-white bg-white">
+                        <a className="navbar-brand abs" href="#">
+                            Photo Grid
+                        </a>
+                        <button
+                            className="navbar-toggler"
+                            type="button"
+                            data-toggle="collapse"
+                            data-target="#collapsingNavbar"
+                        >
+                            <span className="navbar-toggler-icon" />
+                        </button>
+                        <div
+                            className="navbar-collapse collapse"
+                            id="collapsingNavbar"
+                        >
+                            <ul className="navbar-nav ml-auto">
+                                <li className="nav-item">
+                                    <a
+                                        className="nav-link"
+                                        href=""
+                                        data-target="#myModal"
+                                        data-toggle="modal"
+                                    >
+                                        Save
+                                    </a>
+                                </li>
 
-                    <div className="row">
-                        <div className="col-md-3 bg-light pt-3">
-                            <button
-                                type="button"
-                                className="btn btn-primary btn-block"
-                                onClick={this.onAddSidebar.bind(this)}
-                            >
-                                Add Item
-                            </button>
-                            {/* Sidebar */}
-                            <div
-                                className="sidebar"
-                                id="sidebar"
-                                ref={sidebarReact =>
-                                    (this.sidebarReact = sidebarReact)
-                                }
-                            />
+                                <li className="nav-item">
+                                    <a
+                                        className="nav-link"
+                                        href=""
+                                        data-target="#myModal"
+                                        data-toggle="modal"
+                                    >
+                                        Buy
+                                    </a>
+                                </li>
+                            </ul>
                         </div>
+                    </nav>
+                </header>
+                <div className="container-fluid">
+                    <div className="row mt-5">
+                        <div className="col-md-4 offset-md-4 text-center flex-box-sizing">
+                            <div className="flexcontainer">
+                                <div className="vertical">
+                                    <div
+                                        className="photomask"
+                                        id="grid1"
+                                        ref={grid1 => (this.grid1 = grid1)}
+                                    />
+                                </div>
+                                <div className="vertical">
+                                    <div
+                                        className="photomask"
+                                        id="grid2"
+                                        ref={grid2 => (this.grid2 = grid2)}
+                                    />
+                                </div>
+                                <div className="horizontal">
+                                    <div
+                                        className="photomask"
+                                        id="grid3"
+                                        ref={grid3 => (this.grid3 = grid3)}
+                                    />
+                                </div>
+                                <div className="horizontal">
+                                    <div
+                                        className="photomask"
+                                        id="grid4"
+                                        ref={grid4 => (this.grid4 = grid4)}
+                                    />
+                                </div>
+                                <div className="horizontal">
+                                    <div
+                                        className="photomask"
+                                        id="grid5"
+                                        ref={grid5 => (this.grid5 = grid5)}
+                                    />
+                                </div>
+                                <div className="vertical">
+                                    <div
+                                        className="photomask"
+                                        id="grid6"
+                                        ref={grid6 => (this.grid6 = grid6)}
+                                    />
+                                </div>
+                                <div className="vertical">
+                                    <div
+                                        className="photomask"
+                                        id="grid7"
+                                        ref={grid7 => (this.grid7 = grid7)}
+                                    />
+                                </div>
+                                <div className="horizontal">
+                                    <div
+                                        className="photomask"
+                                        id="grid8"
+                                        ref={grid8 => (this.grid8 = grid8)}
+                                    />
+                                </div>
+                                <div className="horizontal">
+                                    <div
+                                        className="photomask"
+                                        id="grid9"
+                                        ref={grid9 => (this.grid9 = grid9)}
+                                    />
+                                </div>
+                                <div className="horizontal">
+                                    <div
+                                        className="photomask"
+                                        id="grid10"
+                                        ref={grid10 => (this.grid10 = grid10)}
+                                    />
+                                </div>
+                                <div className="horizontal">
+                                    <div
+                                        className="photomask"
+                                        id="grid11"
+                                        ref={grid11 => (this.grid11 = grid11)}
+                                    />
+                                </div>
+                                <div className="horizontal">
+                                    <div
+                                        className="photomask"
+                                        id="grid12"
+                                        ref={grid12 => (this.grid12 = grid12)}
+                                    />
+                                </div>
+                                <div className="horizontal">
+                                    <div
+                                        className="photomask"
+                                        id="grid13"
+                                        ref={grid13 => (this.grid13 = grid13)}
+                                        onClick={this.showAlert.bind(this)}
+                                    />
+                                </div>
+                            </div>
 
-                        <div className="col-md-9" /*style={fullImg} */>
-                            {/* Grid */}
-                            <div
-                                className="grid-stack grid-stack-12"
-                                ref={gridReact => (this.gridReact = gridReact)}
-                            />
+                            <div className="flexcontainer">
+                                <div className="horizontal">
+                                    <div className="photomask">
+                                        <a
+                                            href="javascript:void(0)"
+                                            onClick={this.showAlert.bind(this)}
+                                        >
+                                            <img src="https://placeimg.com/120/80/tech" />
+                                        </a>
+                                    </div>
+                                </div>
+                                <div className="horizontal">
+                                    <div className="photomask">
+                                        <img src="https://placeimg.com/120/80/animals" />
+                                    </div>
+                                </div>
+                                <div className="horizontal">
+                                    <div className="photomask">
+                                        <img src="https://placeimg.com/120/80/people" />
+                                    </div>
+                                </div>
+                                <div className="horizontal">
+                                    <div className="photomask">
+                                        <img src="https://placeimg.com/120/80/nature" />
+                                    </div>
+                                </div>
+                                <div className="horizontal">
+                                    <div className="photomask">
+                                        <img src="https://placeimg.com/120/80/any" />
+                                    </div>
+                                </div>
+                                <div className="horizontal">
+                                    <div className="photomask">
+                                        <img src="https://placeimg.com/120/80/tech" />
+                                    </div>
+                                </div>
+                                <div className="vertical">
+                                    <div className="photomask">
+                                        <img src="https://placeimg.com/120/80/tech" />
+                                    </div>
+                                </div>
+                                <div className="vertical">
+                                    <div className="photomask">
+                                        <img src="https://placeimg.com/120/80/nature" />
+                                    </div>
+                                </div>
+                                <div className="vertical">
+                                    <div className="photomask">
+                                        <img src="https://placeimg.com/120/80/nature" />
+                                    </div>
+                                </div>
+                                <div className="vertical">
+                                    <div className="photomask">
+                                        <img src="https://placeimg.com/120/80/nature" />
+                                    </div>
+                                </div>
+                                <div className="horizontal">
+                                    <div className="photomask">
+                                        <img src="https://placeimg.com/120/80/nature" />
+                                    </div>
+                                </div>
+                                <div className="horizontal">
+                                    <div className="photomask">
+                                        <img src="https://placeimg.com/120/80/nature" />
+                                    </div>
+                                </div>
+                                <div className="horizontal">
+                                    <div className="photomask">
+                                        <img src="https://placeimg.com/120/80/nature" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="flexcontainer">
+                                <div className="horizontal" />
+                                <div className="horizontal" />
+                                <div className="horizontal" />
+                                <div className="vertical" />
+                                <div className="vertical" />
+                                <div className="horizontal" />
+                                <div className="horizontal" />
+                                <div className="horizontal" />
+                                <div className="horizontal" />
+                                <div className="horizontal" />
+                                <div className="horizontal" />
+                                <div className="vertical" />
+                                <div className="vertical" />
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        );
-    }
-}
-
-class ItemGrid extends Component {
-    render() {
-        return (
-            <div
-                id={this.props.item.id}
-                className="grid-stack-item"
-                data-gs-id={this.props.item.id}
-                data-gs-x={this.props.item.x}
-                data-gs-y={this.props.item.y}
-                data-gs-width={this.props.item.width}
-                data-gs-height={this.props.item.height}
-                data-gs-min-width={this.props.minWidth}
-                data-gs-max-width={this.props.maxWidth}
-                data-gs-min-height={this.props.minHeight}
-                data-gs-max-height={this.props.maxHeight}
-                data-gs-auto-position="0"
-            >
-                <div
-                    className="grid-stack-item-content"
-                    // style={styleImgDiv}
-                >
-                    <p>
-                        <a
-                            href="javascript:void(0);"
-                            className="removeItemGrid"
-                        >
-                            Remove Grid
-                        </a>
-                    </p>
-                    <p>{this.props.item.name}</p>
-                    <p>
-                        <a
-                            href="javascript:void(0);"
-                            className="deleteItemSidebar"
-                        >
-                            Delete Sidebar
-                        </a>
-                    </p>
+                    <div
+                        className="fixed-bottom bg-transparent mb-4"
+                        style={{
+                            height: "7rem"
+                        }}
+                    >
+                        <div className="row ml-5 mr-5 bg-white">
+                            <div className="col-lg-1 col-md-1 d-none d-sm-none d-md-block align-self-center text-center">
+                                <i
+                                    className="fa fa-chevron-left fa-lg"
+                                    aria-hidden="true"
+                                />
+                            </div>
+                            <div
+                                className="col-md-10"
+                                style={{
+                                    overflowX: "auto",
+                                    overflowY: "hidden",
+                                    whiteSpace: "nowrap"
+                                }}
+                            >
+                                <div
+                                    className="d-inline-block m-2"
+                                    style={{
+                                        border: "1px solid black",
+                                        padding: "25px 28px 29px 28px"
+                                    }}
+                                >
+                                    <a
+                                        href="#"
+                                        onClick={this.addImage.bind(this)}
+                                    >
+                                        add
+                                    </a>
+                                </div>
+                                <div
+                                    id="sidebar"
+                                    ref={sidebar => (this.sidebar = sidebar)}
+                                    style={{ display: "inline" }}
+                                >
+                                    {sidebarItems.map(item => {
+                                        return (
+                                            <div
+                                                id={item.id}
+                                                key={item.id}
+                                                className="d-inline-block thumbnail m-2 position-relative"
+                                                onClick={this.showAlert}
+                                            >
+                                                <button
+                                                    className="close"
+                                                    type="button"
+                                                >
+                                                    ×
+                                                </button>
+                                                <img src={item.img} />
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                            <div className="col-md-1 d-none d-sm-none d-md-block align-self-center text-center">
+                                <i
+                                    className="fa fa-chevron-right fa-lg"
+                                    aria-hidden="true"
+                                />
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         );
