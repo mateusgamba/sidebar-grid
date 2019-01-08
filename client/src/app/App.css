@@ -51,9 +51,9 @@ body {
     position: fixed !important;
     margin: 0 !important;
     z-index: 9999 !important;
-    opacity: 0.8;
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
-    filter: alpha(opacity=80);
+    opacity: 0.6;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=60)";
+    filter: alpha(opacity=60);
     display: block !important;
     text-align: center !important;
     overflow: hidden;
@@ -74,7 +74,6 @@ body {
     opacity: 0.2;
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=20)";
     filter: alpha(opacity=20);
-    background: blue !important;
     line-height: 1.2em;
     min-height: 5em;
 }

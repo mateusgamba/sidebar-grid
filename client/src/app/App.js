@@ -6,50 +6,32 @@ import "./App.css";
 import "./grid.scss";
 import $ from "jquery";
 import dogImage from "./dog.jpg";
+import wineImage from "./wine.jpg";
+
+import Wrapper from "./Wrapper";
 
 export default class App extends Component {
     constructor() {
         super();
 
-        let itemsGrid = [
+        let gridItems = [
             {
-                x: 0,
-                y: 0,
-                width: 2,
-                height: 2,
-                id: "a",
-                name: "Item a"
+                id: "item-5",
+                img: dogImage,
+                grid: "grid3"
             },
             {
-                x: 2,
-                y: 0,
-                width: 2,
-                height: 2,
-                id: "b",
-                name: "Item b"
-            }
-        ];
-
-        let itemsSidebar = [
-            {
-                id: "c",
-                name: "Item c"
-            },
-            {
-                id: "d",
-                name: "Item d"
-            },
-            {
-                id: "e",
-                name: "Item e"
+                id: "item-6",
+                img:
+                    "https://3.bp.blogspot.com/-gA3KvKhA-8w/USVEdAiWi6I/AAAAAAAAA58/btNKJqIkXHc/s320/pieza1.jpg",
+                grid: "grid39"
             }
         ];
 
         const sidebarItems = [
             {
                 id: "item-1",
-                img:
-                    "https://3.bp.blogspot.com/-gA3KvKhA-8w/USVEdAiWi6I/AAAAAAAAA58/btNKJqIkXHc/s320/pieza1.jpg"
+                img: wineImage
             },
             {
                 id: "item-2",
@@ -69,27 +51,62 @@ export default class App extends Component {
         ];
 
         this.state = {
-            sidebarItems
+            sidebarItems,
+            gridItems,
+            teste: []
         };
 
-        const data = this.getStorage();
+        this.savegrid = this.savegrid.bind(this);
+        this.onList = this.onList.bind(this);
 
-        if (data !== null) {
-            itemsGrid = data.itemsGrid;
-            itemsSidebar = data.itemsSidebar;
-        }
+        // const data = this.getStorage();
 
-        this.state = {
-            itemsGrid,
-            itemsSidebar,
-            sidebarItems
-        };
+        // if (data !== null) {
+        //     itemsGrid = data.itemsGrid;
+        //     itemsSidebar = data.itemsSidebar;
+        // }
 
-        this.showAlert = this.showAlert.bind(this);
+        // this.state = {
+        //     itemsGrid,
+        //     itemsSidebar,
+        //     sidebarItems
+        // };
 
-        // this.onAddSidebar = this.onAddSidebar.bind(this);
+        //this.sidebar = React.createRef();
+        //this.sidebar = null;
+        //this.sidebar = "sidebar";
     }
 
+    componentDidMount() {
+        // const options = {
+        //     isContainer: function(el) {
+        //         return false;
+        //     },
+        //     moves: function(el, source, handle, sibling) {
+        //         return true;
+        //     },
+        //     accepts: function(el, target, source, sibling) {
+        //         return (
+        //             target.id != "sidebar" &&
+        //             document.getElementById(target.id).childElementCount < 1
+        //         );
+        //     },
+        //     invalid: function(el, handle) {
+        //         return false;
+        //     },
+        //     copy: false,
+        //     copySortSource: true,
+        //     revertOnSpill: false,
+        //     removeOnSpill: false,
+        //     mirrorContainer: document.body,
+        //     allowDraggingContainers: false,
+        //     ignoreInputTextSelection: true
+        // };
+        // const sidebar = this.sidebar;
+        // this.drake = dragula([sidebar], options);
+    }
+
+    /*
     componentDidMount() {
         let options = {
             isContainer: function(el) {
@@ -107,13 +124,13 @@ export default class App extends Component {
             invalid: function(el, handle) {
                 return false;
             },
-            copy: false, // elements are moved by default, not copied
-            copySortSource: true, // elements in copy-source containers can be reordered
-            revertOnSpill: false, // spilling will put the element back where it was dragged from, if this is true
-            removeOnSpill: false, // spilling will `.remove` the element, if this is true
-            mirrorContainer: document.body, // set the element that gets mirror elements appended
-            allowDraggingContainers: false, // lets users drag containers themselves as a whole, disabled by default
-            ignoreInputTextSelection: true // allows users to select input text, see details below
+            copy: false,
+            copySortSource: true,
+            revertOnSpill: false,
+            removeOnSpill: false,
+            mirrorContainer: document.body,
+            allowDraggingContainers: false,
+            ignoreInputTextSelection: true
         };
 
         const sidebar = this.sidebar;
@@ -130,6 +147,32 @@ export default class App extends Component {
         const grid11 = this.grid11;
         const grid12 = this.grid12;
         const grid13 = this.grid13;
+        const grid14 = this.grid14;
+        const grid15 = this.grid15;
+        const grid16 = this.grid16;
+        const grid17 = this.grid17;
+        const grid18 = this.grid18;
+        const grid19 = this.grid19;
+        const grid20 = this.grid20;
+        const grid21 = this.grid21;
+        const grid22 = this.grid22;
+        const grid23 = this.grid23;
+        const grid24 = this.grid24;
+        const grid25 = this.grid25;
+        const grid26 = this.grid26;
+        const grid27 = this.grid27;
+        const grid28 = this.grid28;
+        const grid29 = this.grid29;
+        const grid30 = this.grid30;
+        const grid31 = this.grid31;
+        const grid32 = this.grid32;
+        const grid33 = this.grid33;
+        const grid34 = this.grid34;
+        const grid35 = this.grid35;
+        const grid36 = this.grid36;
+        const grid37 = this.grid37;
+        const grid38 = this.grid38;
+        const grid39 = this.grid39;
 
         const drake = dragula(
             [
@@ -146,35 +189,188 @@ export default class App extends Component {
                 grid10,
                 grid11,
                 grid12,
-                grid13
+                grid13,
+                grid14,
+                grid15,
+                grid16,
+                grid17,
+                grid18,
+                grid19,
+                grid20,
+                grid21,
+                grid22,
+                grid23,
+                grid24,
+                grid25,
+                grid26,
+                grid27,
+                grid28,
+                grid29,
+                grid30,
+                grid31,
+                grid32,
+                grid33,
+                grid34,
+                grid35,
+                grid36,
+                grid37,
+                grid38,
+                grid39
             ],
             options
         );
         drake.on("drag", function(el, source) {
-            console.log(el);
             $(el)
                 .children("button")
-                .remove();
+                .hide();
 
-            $(el).addClass("d-inline-block thumbnail m-2 position-relative");
+            $(el).addClass("thumbnail");
         });
 
-        drake.on("drop", function(el, target, source, sibling) {
-            $(el).removeClass();
+        drake.on(
+            "drop",
+            function(el, target, source, sibling) {
+                //  this._onDrop(el, target, source, sibling);
+
+                var img;
+                var c = document.getElementById("sidebar").children;
+                var novo = [];
+                for (var i = 0; i < c.length; i++) {
+                    console.log(c[i].id);
+                    img = document.getElementById(c[i].id).children[1].src;
+                    console.log(img);
+                    novo.push({
+                        id: c[i].id,
+                        img: img
+                    });
+                }
+                console.log("novo", novo);
+                this.setState({ teste: novo });
+            }.bind(this)
+        );
+
+        drake.on("cancel", function(el, target, source) {
             $(el)
                 .children("button")
-                .remove();
+                .show();
         });
-        drake.on("out", function(el, target, source, sibling) {
-            $(el).removeClass();
-            $(el)
-                .children("button")
-                .remove();
-        });
+        drake.on("dragend", function(el, target, source) {}.bind(this));
 
-        drake.on("over", function(el, target, source) {});
+        drake.on("over", function(el, target, source) {
+            const classes = target.parentElement.className;
+            const itemClass = classes.split(" ");
+            let position = "";
+            for (let i = 0; i < itemClass.length; i++) {
+                if (
+                    itemClass[i] === "vertical" ||
+                    itemClass[i] === "horizontal"
+                ) {
+                    position = itemClass[i];
+                    break;
+                }
+            }
+            console.log(position);
+        });
     }
 
+    _onDrop(el, target, source, sibling) {
+        const id = el.id;
+
+        // var container = document.getElementById("sidebar");
+        // var te = document.getElementById(id);
+
+        // container.removeChild(te);
+
+        $(el).removeClass();
+        $(el)
+            .children("button")
+            .remove();
+
+        if (target !== "") {
+            console.log(id);
+            const sidebarItems = this.state.sidebarItems;
+            const index = sidebarItems.map(item => item.id).indexOf(id);
+            const item = sidebarItems[index];
+            console.log("item", item);
+            console.log("index", index);
+            const itemGrid = {
+                id: item.id,
+                img: item.img,
+                grid: target.id
+            };
+            sidebarItems.splice(index, 1);
+            console.log("sidebarItems", sidebarItems);
+            console.log("sibling", sibling);
+
+            // var g = document.createElement("span");
+            // g.setAttribute("id", id);
+
+            // document.getElementById("sidebar").appendChild(g);
+
+            const gridItems = this.state.gridItems;
+            gridItems.push(itemGrid);
+            console.log(gridItems);
+            // this.savegrid(gridItems);
+            //this.setState({ gridItems });
+            //   this.savegrid();
+            // setTimeout(
+            //     function() {
+            //         // var container = document.getElementById("sidebar");
+            //         // var te = document.getElementById("item-1");
+
+            //         // container.parentNode.removeChild(te);
+
+            //     }.bind(this),
+            //     1500
+            // );
+        }
+    }
+
+    */
+
+    updateList(lista) {
+        // const sidebarItems = this.state.sidebarItems;
+        // const index = sidebarItems.map(item => item.id).indexOf(id);
+        // const item = sidebarItems[index];
+
+        // const itemGrid = {
+        //     id: item.id,
+        //     img: item.img,
+        //     grid: target.id
+        // };
+        // sidebarItems.splice(index, 1);
+        console.log(lista);
+        this.setState({ sidebarItems: lista });
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        return true;
+    }
+
+    componentWillUpdate(props, state) {
+        console.log(state);
+        //this.setState({ sidebarItems: state.teste });
+    }
+
+    savegrid(gridItems) {
+        // const sidebarItems = this.state.sidebarItems;
+        // console.log(sidebarItems);
+        //this.setState({ gridItems });
+        // var img;
+        // var c = document.getElementById("sidebar").children;
+        // var novo = [];
+        // for (var i = 0; i < c.length; i++) {
+        //     console.log(c[i].id);
+        //     img = document.getElementById(c[i].id).children[1].src;
+        //     console.log(img);
+        //     novo.push({
+        //         id: c[i].id,
+        //         img: img
+        //     });
+        // }
+        // console.log("novo", novo);
+        // // this.setState({ sidebarItems: novo });
+    }
     addImage(e) {
         const id = this.charRandom();
         const item = {
@@ -186,8 +382,12 @@ export default class App extends Component {
         }));
     }
 
-    showAlert() {
-        alert(1);
+    showAlert(id, e) {
+        const item = document.getElementById(id);
+        if (item.parentElement.id === "sidebar") {
+            return false;
+        }
+        alert("grid");
     }
 
     charRandom() {
@@ -212,8 +412,14 @@ export default class App extends Component {
         }
     }
 
+    onList() {
+        //        console.log("teste");
+        console.log("sidebarItems", this.state.sidebarItems);
+        console.log("gridItems", this.state.gridItems);
+    }
+
     render() {
-        const { sidebarItems } = this.state;
+        const { sidebarItems, gridItems } = this.state;
         return (
             <div>
                 <header>
@@ -255,268 +461,38 @@ export default class App extends Component {
                                         Buy
                                     </a>
                                 </li>
+
+                                <li className="nav-item">
+                                    <button
+                                        className="btn"
+                                        type="button"
+                                        onClick={this.onList}
+                                    >
+                                        List1
+                                    </button>
+                                </li>
                             </ul>
                         </div>
                     </nav>
                 </header>
                 <div className="container-fluid">
-                    <div className="row mt-5">
-                        <div className="col-md-4 offset-md-4 text-center flex-box-sizing">
-                            <div className="flexcontainer">
-                                <div className="vertical">
-                                    <div
-                                        className="photomask"
-                                        id="grid1"
-                                        ref={grid1 => (this.grid1 = grid1)}
-                                    />
-                                </div>
-                                <div className="vertical">
-                                    <div
-                                        className="photomask"
-                                        id="grid2"
-                                        ref={grid2 => (this.grid2 = grid2)}
-                                    />
-                                </div>
-                                <div className="horizontal">
-                                    <div
-                                        className="photomask"
-                                        id="grid3"
-                                        ref={grid3 => (this.grid3 = grid3)}
-                                    />
-                                </div>
-                                <div className="horizontal">
-                                    <div
-                                        className="photomask"
-                                        id="grid4"
-                                        ref={grid4 => (this.grid4 = grid4)}
-                                    />
-                                </div>
-                                <div className="horizontal">
-                                    <div
-                                        className="photomask"
-                                        id="grid5"
-                                        ref={grid5 => (this.grid5 = grid5)}
-                                    />
-                                </div>
-                                <div className="vertical">
-                                    <div
-                                        className="photomask"
-                                        id="grid6"
-                                        ref={grid6 => (this.grid6 = grid6)}
-                                    />
-                                </div>
-                                <div className="vertical">
-                                    <div
-                                        className="photomask"
-                                        id="grid7"
-                                        ref={grid7 => (this.grid7 = grid7)}
-                                    />
-                                </div>
-                                <div className="horizontal">
-                                    <div
-                                        className="photomask"
-                                        id="grid8"
-                                        ref={grid8 => (this.grid8 = grid8)}
-                                    />
-                                </div>
-                                <div className="horizontal">
-                                    <div
-                                        className="photomask"
-                                        id="grid9"
-                                        ref={grid9 => (this.grid9 = grid9)}
-                                    />
-                                </div>
-                                <div className="horizontal">
-                                    <div
-                                        className="photomask"
-                                        id="grid10"
-                                        ref={grid10 => (this.grid10 = grid10)}
-                                    />
-                                </div>
-                                <div className="horizontal">
-                                    <div
-                                        className="photomask"
-                                        id="grid11"
-                                        ref={grid11 => (this.grid11 = grid11)}
-                                    />
-                                </div>
-                                <div className="horizontal">
-                                    <div
-                                        className="photomask"
-                                        id="grid12"
-                                        ref={grid12 => (this.grid12 = grid12)}
-                                    />
-                                </div>
-                                <div className="horizontal">
-                                    <div
-                                        className="photomask"
-                                        id="grid13"
-                                        ref={grid13 => (this.grid13 = grid13)}
-                                        onClick={this.showAlert.bind(this)}
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="flexcontainer">
-                                <div className="horizontal">
-                                    <div className="photomask">
-                                        <a
-                                            href="javascript:void(0)"
-                                            onClick={this.showAlert.bind(this)}
-                                        >
-                                            <img src="https://placeimg.com/120/80/tech" />
-                                        </a>
-                                    </div>
-                                </div>
-                                <div className="horizontal">
-                                    <div className="photomask">
-                                        <img src="https://placeimg.com/120/80/animals" />
-                                    </div>
-                                </div>
-                                <div className="horizontal">
-                                    <div className="photomask">
-                                        <img src="https://placeimg.com/120/80/people" />
-                                    </div>
-                                </div>
-                                <div className="horizontal">
-                                    <div className="photomask">
-                                        <img src="https://placeimg.com/120/80/nature" />
-                                    </div>
-                                </div>
-                                <div className="horizontal">
-                                    <div className="photomask">
-                                        <img src="https://placeimg.com/120/80/any" />
-                                    </div>
-                                </div>
-                                <div className="horizontal">
-                                    <div className="photomask">
-                                        <img src="https://placeimg.com/120/80/tech" />
-                                    </div>
-                                </div>
-                                <div className="vertical">
-                                    <div className="photomask">
-                                        <img src="https://placeimg.com/120/80/tech" />
-                                    </div>
-                                </div>
-                                <div className="vertical">
-                                    <div className="photomask">
-                                        <img src="https://placeimg.com/120/80/nature" />
-                                    </div>
-                                </div>
-                                <div className="vertical">
-                                    <div className="photomask">
-                                        <img src="https://placeimg.com/120/80/nature" />
-                                    </div>
-                                </div>
-                                <div className="vertical">
-                                    <div className="photomask">
-                                        <img src="https://placeimg.com/120/80/nature" />
-                                    </div>
-                                </div>
-                                <div className="horizontal">
-                                    <div className="photomask">
-                                        <img src="https://placeimg.com/120/80/nature" />
-                                    </div>
-                                </div>
-                                <div className="horizontal">
-                                    <div className="photomask">
-                                        <img src="https://placeimg.com/120/80/nature" />
-                                    </div>
-                                </div>
-                                <div className="horizontal">
-                                    <div className="photomask">
-                                        <img src="https://placeimg.com/120/80/nature" />
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="flexcontainer">
-                                <div className="horizontal" />
-                                <div className="horizontal" />
-                                <div className="horizontal" />
-                                <div className="vertical" />
-                                <div className="vertical" />
-                                <div className="horizontal" />
-                                <div className="horizontal" />
-                                <div className="horizontal" />
-                                <div className="horizontal" />
-                                <div className="horizontal" />
-                                <div className="horizontal" />
-                                <div className="vertical" />
-                                <div className="vertical" />
-                            </div>
-                        </div>
-                    </div>
-                    <div
-                        className="fixed-bottom bg-transparent mb-4"
-                        style={{
-                            height: "7rem"
-                        }}
-                    >
-                        <div className="row ml-5 mr-5 bg-white">
-                            <div className="col-lg-1 col-md-1 d-none d-sm-none d-md-block align-self-center text-center">
-                                <i
-                                    className="fa fa-chevron-left fa-lg"
-                                    aria-hidden="true"
-                                />
-                            </div>
-                            <div
-                                className="col-md-10"
-                                style={{
-                                    overflowX: "auto",
-                                    overflowY: "hidden",
-                                    whiteSpace: "nowrap"
-                                }}
-                            >
-                                <div
-                                    className="d-inline-block m-2"
-                                    style={{
-                                        border: "1px solid black",
-                                        padding: "25px 28px 29px 28px"
-                                    }}
-                                >
-                                    <a
-                                        href="#"
-                                        onClick={this.addImage.bind(this)}
-                                    >
-                                        add
-                                    </a>
-                                </div>
-                                <div
-                                    id="sidebar"
-                                    ref={sidebar => (this.sidebar = sidebar)}
-                                    style={{ display: "inline" }}
-                                >
-                                    {sidebarItems.map(item => {
-                                        return (
-                                            <div
-                                                id={item.id}
-                                                key={item.id}
-                                                className="d-inline-block thumbnail m-2 position-relative"
-                                                onClick={this.showAlert}
-                                            >
-                                                <button
-                                                    className="close"
-                                                    type="button"
-                                                >
-                                                    ×
-                                                </button>
-                                                <img src={item.img} />
-                                            </div>
-                                        );
-                                    })}
-                                </div>
-                            </div>
-                            <div className="col-md-1 d-none d-sm-none d-md-block align-self-center text-center">
-                                <i
-                                    className="fa fa-chevron-right fa-lg"
-                                    aria-hidden="true"
-                                />
-                            </div>
-                        </div>
-                    </div>
+                    <button className="btn" type="button" onClick={this.onList}>
+                        List1
+                    </button>
+                    <Wrapper
+                        sidebarItems={sidebarItems}
+                        gridItems={gridItems}
+                        updateList={this.updateList.bind(this)}
+                    />
                 </div>
             </div>
         );
     }
 }
+// const SidebarForwardingRef = React.forwardRef((props, ref) => {
+//     return <Sidebar {...props} forwardedRef={ref} />;
+// });
+
+// const GridForwardingRef = React.forwardRef((props, ref) => {
+//     return <Grid {...props} forwardedRef={ref} />;
+// });
