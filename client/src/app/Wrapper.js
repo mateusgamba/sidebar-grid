@@ -9,70 +9,25 @@ import wineImage from "./wine.jpg";
 export default class Wrapper extends Component {
     constructor(props) {
         super(props);
-        // let gridItems = [
-        //     {
-        //         id: "item-5",
-        //         img: dogImage,
-        //         grid: "grid3"
-        //     },
-        //     {
-        //         id: "item-6",
-        //         img:
-        //             "https://3.bp.blogspot.com/-gA3KvKhA-8w/USVEdAiWi6I/AAAAAAAAA58/btNKJqIkXHc/s320/pieza1.jpg",
-        //         grid: "grid39"
-        //     }
-        // ];
-
-        // const sidebarItems = [
-        //     {
-        //         id: "item-1",
-        //         img: wineImage
-        //     },
-        //     {
-        //         id: "item-2",
-        //         img:
-        //             "https://1.bp.blogspot.com/-daD5d1V4ct4/USVEdAGqdDI/AAAAAAAAA50/XXo8rBlTGpQ/s320/pieza2.jpg"
-        //     },
-        //     {
-        //         id: "item-3",
-        //         img:
-        //             "https://1.bp.blogspot.com/-8LurPyhzlD4/USVEdAH-KJI/AAAAAAAAA54/INQRSWmH79k/s320/pieza3.jpg"
-        //     },
-        //     {
-        //         id: "item-4",
-        //         img:
-        //             "https://4.bp.blogspot.com/-2R3yc2Kggvo/USVEd9UUR5I/AAAAAAAAA6A/YBxpgYG15NI/s320/pieza4.jpg"
-        //     }
-        // ];
 
         this.state = {
             sidebarItems: this.props.sidebarItems,
-            gridItems: this.props.gridItems,
-            teste: []
+            gridItems: this.props.gridItems
         };
     }
 
-    addImage(e) {
-        const id = this.charRandom();
-        const item = {
-            id,
-            img: dogImage
-        };
-        this.setState(prevState => ({
-            sidebarItems: [...prevState.sidebarItems, item]
-        }));
+    removeImage() {
+        return false;
     }
 
-    showAlert(id, e) {
+    openImage(id, e) {
         const item = document.getElementById(id);
         if (item.parentElement.id === "sidebar") {
             return false;
         }
         alert("grid");
     }
-    deleteImage() {
-        return false;
-    }
+
     componentDidMount() {
         let options = {
             isContainer: function(el) {
@@ -197,22 +152,62 @@ export default class Wrapper extends Component {
             "drop",
             function(el, target, source, sibling) {
                 //  this._onDrop(el, target, source, sibling);
+                $(el)
+                    .children("button")
+                    .hide();
 
-                var img;
-                var c = document.getElementById("sidebar").children;
-                var novo = [];
-                for (var i = 0; i < c.length; i++) {
-                    img = document.getElementById(c[i].id).children[1].src;
+                $(el).removeClass();
+                // console.log("target", target);
 
-                    novo.push({
-                        id: c[i].id,
-                        img: img
-                    });
+                const id = el.id;
+
+                if (source.className === "photomask") {
+                    console.log("entro");
+                    const gridItems = [...this.state.gridItems];
+                    const index = gridItems
+                        .map(item => item.grid)
+                        .indexOf(source.id);
+                    const item = gridItems[index];
+                    console.log("item", item);
+                    if (item !== undefined) {
+                        item["grid"] = target.id;
+                        //console.log("itemGrid", itemGrid);
+                        //gridItems.splice(index, 1);
+
+                        //gridItems.push(itemGrid);
+                        this.props.updateGrid();
+                    }
+                } else if (source.id === "sidebar") {
+                    const sidebarItems1 = this.state.sidebarItems;
+                    const sidebarItems = sidebarItems1.map(a => ({ ...a }));
+                    const index = sidebarItems.map(item => item.id).indexOf(id);
+                    const item = sidebarItems[index];
+
+                    const itemGrid = {
+                        id: item.id,
+                        img: item.img,
+                        grid: target.id
+                    };
+                    //sidebarItems.splice(index, 1);
+                    console.log(sidebarItems);
+                    this.props.updateList(id, itemGrid);
+
+                    // var img;
+                    // var c = document.getElementById("sidebar").children;
+                    // var novo = [];
+                    // for (var i = 0; i < c.length; i++) {
+                    //     img = document.getElementById(c[i].id).children[1].src;
+
+                    //     novo.push({
+                    //         id: c[i].id,
+                    //         img: img
+                    //     });
+                    // }
+
+                    //this.setState({ teste: novo });
+                    //console.log(novo)
+                    //this.props.updateList(novo);
                 }
-
-                this.setState({ teste: novo });
-
-                this.props.updateList(novo);
             }.bind(this)
         );
 
@@ -221,7 +216,6 @@ export default class Wrapper extends Component {
                 .children("button")
                 .show();
         });
-        drake.on("dragend", function(el, target, source) {}.bind(this));
 
         drake.on("over", function(el, target, source) {
             const classes = target.parentElement.className;
@@ -567,7 +561,7 @@ export default class Wrapper extends Component {
                                     padding: "25px 28px 29px 28px"
                                 }}
                             >
-                                <a href="#" onClick={this.addImage.bind(this)}>
+                                <a href="#" onClick={this.props.addImage}>
                                     add
                                 </a>
                             </div>
@@ -582,7 +576,7 @@ export default class Wrapper extends Component {
                                             id={item.id}
                                             key={item.id}
                                             className="d-inline-block thumbnail m-2 position-relative"
-                                            onClick={this.showAlert.bind(
+                                            onClick={this.openImage.bind(
                                                 this,
                                                 item.id
                                             )}
@@ -590,7 +584,7 @@ export default class Wrapper extends Component {
                                             <button
                                                 className="close"
                                                 type="button"
-                                                onClick={this.deleteImage.bind(
+                                                onClick={this.removeImage.bind(
                                                     this,
                                                     item.id
                                                 )}
@@ -621,7 +615,7 @@ const ItemGridForwardingRef = React.forwardRef((props, ref) => {
 });
 
 class ItemGrid extends Component {
-    showAlertItem(id, e) {
+    openImage(id, e) {
         const item = document.getElementById(id);
         if (item.parentElement.id === "sidebar") {
             return false;
@@ -641,10 +635,7 @@ class ItemGrid extends Component {
                                 <div
                                     id={item.id}
                                     key={item.id}
-                                    onClick={this.showAlertItem.bind(
-                                        this,
-                                        item.id
-                                    )}
+                                    onClick={this.openImage.bind(this, item.id)}
                                 >
                                     <img src={item.img} />
                                 </div>

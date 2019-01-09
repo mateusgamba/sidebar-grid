@@ -28,7 +28,7 @@ export default class App extends Component {
             }
         ];
 
-        const sidebarItems = [
+        let sidebarItems = [
             {
                 id: "item-1",
                 img: wineImage
@@ -50,27 +50,20 @@ export default class App extends Component {
             }
         ];
 
-        this.state = {
-            sidebarItems,
-            gridItems,
-            teste: []
-        };
-
         this.savegrid = this.savegrid.bind(this);
         this.onList = this.onList.bind(this);
 
-        // const data = this.getStorage();
+        const data = this.getStorage();
 
-        // if (data !== null) {
-        //     itemsGrid = data.itemsGrid;
-        //     itemsSidebar = data.itemsSidebar;
-        // }
+        if (data !== null) {
+            sidebarItems = data.sidebarItems;
+            gridItems = data.gridItems;
+        }
 
-        // this.state = {
-        //     itemsGrid,
-        //     itemsSidebar,
-        //     sidebarItems
-        // };
+        this.state = {
+            sidebarItems,
+            gridItems
+        };
 
         //this.sidebar = React.createRef();
         //this.sidebar = null;
@@ -328,7 +321,7 @@ export default class App extends Component {
 
     */
 
-    updateList(lista) {
+    updateList(sidebarItems, gridItem) {
         // const sidebarItems = this.state.sidebarItems;
         // const index = sidebarItems.map(item => item.id).indexOf(id);
         // const item = sidebarItems[index];
@@ -339,18 +332,33 @@ export default class App extends Component {
         //     grid: target.id
         // };
         // sidebarItems.splice(index, 1);
-        console.log(lista);
-        this.setState({ sidebarItems: lista });
+        // console.log(lista);
+        //this.setState({ sidebarItems: sidebarItems });
+
+        this.setState(prevState => ({
+            sidebarItems: prevState.sidebarItems.filter(person => {
+                return person.id !== sidebarItems;
+            }),
+            gridItems: [...prevState.gridItems, gridItem]
+        }));
+
+        this.saveStorage();
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
-        return true;
+    updateGrid() {
+        // this.setState({ gridItems });
+
+        this.saveStorage();
     }
 
-    componentWillUpdate(props, state) {
-        console.log(state);
-        //this.setState({ sidebarItems: state.teste });
-    }
+    // shouldComponentUpdate(nextProps, nextState) {
+    //     return true;
+    // }
+
+    // componentWillUpdate(props, state) {
+    //     console.log(state);
+    //     //this.setState({ sidebarItems: state.teste });
+    // }
 
     savegrid(gridItems) {
         // const sidebarItems = this.state.sidebarItems;
@@ -371,15 +379,20 @@ export default class App extends Component {
         // console.log("novo", novo);
         // // this.setState({ sidebarItems: novo });
     }
-    addImage(e) {
+    addImage() {
+        console.log("entro");
         const id = this.charRandom();
         const item = {
             id,
             img: dogImage
         };
-        this.setState(prevState => ({
-            sidebarItems: [...prevState.sidebarItems, item]
-        }));
+
+        const list = this.state.sidebarItems;
+        list.push(item);
+
+        this.setState({ sidebarItems: list });
+
+        this.saveStorage();
     }
 
     showAlert(id, e) {
@@ -390,12 +403,6 @@ export default class App extends Component {
         alert("grid");
     }
 
-    charRandom() {
-        return Math.random()
-            .toString(36)
-            .slice(2, 4);
-    }
-
     getStorage() {
         return global.localStorage
             ? JSON.parse(global.localStorage.getItem("photo-grid"))
@@ -404,8 +411,8 @@ export default class App extends Component {
 
     saveStorage() {
         const data = {
-            itemsSidebar: this.state.itemsSidebar,
-            itemsGrid: this.state.itemsGrid
+            sidebarItems: this.state.sidebarItems,
+            gridItems: this.state.gridItems
         };
         if (global.localStorage) {
             global.localStorage.setItem("photo-grid", JSON.stringify(data));
@@ -416,6 +423,12 @@ export default class App extends Component {
         //        console.log("teste");
         console.log("sidebarItems", this.state.sidebarItems);
         console.log("gridItems", this.state.gridItems);
+    }
+
+    charRandom() {
+        return Math.random()
+            .toString(36)
+            .slice(2, 4);
     }
 
     render() {
@@ -476,13 +489,12 @@ export default class App extends Component {
                     </nav>
                 </header>
                 <div className="container-fluid">
-                    <button className="btn" type="button" onClick={this.onList}>
-                        List1
-                    </button>
                     <Wrapper
                         sidebarItems={sidebarItems}
                         gridItems={gridItems}
                         updateList={this.updateList.bind(this)}
+                        updateGrid={this.updateGrid.bind(this)}
+                        addImage={this.addImage.bind(this)}
                     />
                 </div>
             </div>
