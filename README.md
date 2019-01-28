@@ -1,15 +1,14 @@
 # Drag drop from sidebar
 
-In one of the projects I'm working on I needed to include a drag and drop feature from a sidebar item to grid using React. Of the components found was used React-grid-layout with Toolbox example.
-After studying component and applied to the project I realised I needed extra functionality such as drag an item from the sidebar to the grid.
+I worked on a project that I had to include a drag and drop functionality from a sidebar item to a grid using React. The first  component I found was React-grid-layout with the Toolbox example but after applied to my project I realised it didn't have the functionality I was looking for.
 
-I found the gridstack.js plugin developed in Jquery and although I don’t like to mix react with Jquery I decided to use it for its resources.
+I found the gridstack.js plugin developed in jQuery and although I don’t like mixing react with jQuery I decided to use it to re-use some the drag and drop functionality I needed.
 
-In this tutorial I will explain my experience creating a drag and drop prototype where it is drag item from sidebar to grid and remove items from grid or sidebar.
+In this tutorial I will share my experience creating a prototype where an item is dragged from the sidebar to a grid and then removed from the grid or sidebar.
 
 ![](doc/drag-drop-sidebar.gif)
 
-The first step is necessary install the dependencies and set up the webpack.
+First, install the dependencies and set up webpack.
 
 Dependencies used:
 
@@ -22,13 +21,13 @@ Dependencies used:
 npm install gridstack bootstrap jquery jquery-ui
 ```
 
-After it has got unzip the webpack from react for set up jquery-ui
+Next, unzip webpack from react for set up jquery-ui
 
 ```
 npm run eject
 ```
 
-Open webpack.config.dev.js file into config folder and you go to line where you find alias and you add the follow instruct:
+Open `webpack.config.dev.js` file and find the line where you find alias and you add the follow:
 
 ```
 'jquery-ui': 'jquery-ui/ui'
@@ -36,7 +35,7 @@ Open webpack.config.dev.js file into config folder and you go to line where you 
 
 ![alias](doc/alias-config-webpack.png)
 
-Now, let's start writing the code with the importation of the dependencias:
+Now, let's start writing the code importing the dependencies:
 
 ```javascript
 import ReactDOMServer from "react-dom/server";
@@ -49,9 +48,9 @@ import "gridstack/dist/gridstack-extra.css";
 import "./grid.css";
 ```
 
-It's necessary to use ReactDOMServer because one of the problems of the gridstack is that use jquery, so we need to convert a component React to Jquery.
+ReactDOMServer must be used otherwise gridstack and jQuery will generate errors (won't compile? explain why...). We need to convert a React component to jQuery.
 
-In the constructor of class let's add a pre-list of grid items and sidebar items.
+In the constructor of the class let's add a pre-list of grid items and sidebar items.
 
 ```javascript
 constructor() {
