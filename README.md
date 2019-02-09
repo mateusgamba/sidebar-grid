@@ -229,20 +229,20 @@ componentDidMount() {
 ```
 
 this.$gridReact and this.$sidebarReact are used to get the reference from the DOM element.
-The options variable is used for the grid parameters.
+Variable is used for the grid parameters.
 
--   width: amount of columns;
--   height: maximum rows amount;
--   acceptWidgets" accept widgets dragged from other grids or from outside;
+-   width: number of columns;
+-   height: maximum number of rows;
+-   acceptWidgets: accept widgets dragged from other grids or from outside;
 -   float: enable floating widgets;
 
-For more information, access [doc](https://github.com/gridstack/gridstack.js/tree/develop/doc#options)
+For more information [doc](https://github.com/gridstack/gridstack.js/tree/develop/doc#options)
 
-The next line sets up the parameters in grid.
+The next line sets up the parameters on the grid.
 
 this.loadGrid() and this.loadSidebar() call the methods to load the items.
 
-It then attaches event handlers for the grid. Gridstack has various events, you can check [doc](https://github.com/gridstack/gridstack.js/tree/develop/doc#events) to find out more about them.
+It attaches event handlers for the grid. Gridstack has various events, you can check [doc](https://github.com/gridstack/gridstack.js/tree/develop/doc#events) to find out more about them.
 
 For this tutorial I used change and added events. Change is used for adding/removing items or to change the position of existing items. Added is used to add item from sidebar to grid.
 
@@ -295,9 +295,9 @@ addWidget is used to create a new item. The addWidget has eight parameters, you 
 -   x, y, width, height - widget position/dimensions (optional)
 -   autoPosition - if true then x, y parameters will be ignored and widget will be placed on the first available position (optional)
 
-The parameter first I'm using ReactDOMServer.renderToStaticMarkup to receives JSX from component and returns clean and escaped html in string, because the render is make for jQuery.
+The first parameter I'm using is ReactDOMServer.renderToStaticMarkup to receive JSX from component and return clean and escaped html in string, because the render is made for jQuery.
 
-for load the items in sidebar, it is used the method:
+for loading items in sidebar, the following method is used:
 
 ```javascript
 loadSidebar() {
@@ -317,7 +317,7 @@ loadSidebar() {
 }
 ```
 
-That method just data load from state to jQuery function and it is used the same process of render (ReactDOMServer.renderToStaticMarkup). After, it is delete all item and added again. It is call the method this.dragSidebar that enable draggable functionality from sidebar to grid.
+The method loads the data from state to jQuery function and it is used the same process of render (ReactDOMServer.renderToStaticMarkup). After, all items are deleted and added again. It is called the method this.dragSidebar that enables draggable functionality from sidebar to grid.
 
 The this.draggable has follow code:
 
@@ -332,14 +332,14 @@ dragSidebar() {
 }
 ```
 
-The dragSidebar method has functanality of sidebar drag and drop. it is used this.\$sidebarReact.children() because it is necessary all items from sidebar has the drag and drop. The parameters are used to:
+The dragSidebar method has the sidebar drag and drop functionality. It is used this.\$sidebarReact.children() because it is required on all items from the sidebar which can be dragged and dropped. The parameters used are:
 
 -   revert: for item return to sidebar if the item has not been dropped on a droppable.
--   handle: specific the element for the dragging
+-   handle: specific element for dragging.
 -   scroll: container auto-scrolls while dragging.
 -   appendTo: where the draggable helper should be appended to while dragging.
 
-Now, It will be implemented the events
+Now, the events will be implemented.
 
 ```javascript
 onAddGridFromSidebar(e, items) {
@@ -357,7 +357,7 @@ onAddGridFromSidebar(e, items) {
 }
 ```
 
-The onAddGridFromSidebar method remove the item from sidebar, itemsSidebar state, and add in the itemsGrid state.
+The method onAddGridFromSidebar removes the item from sidebar, itemsSidebar state, and add in the itemsGrid state.
 
 ```javascript
 onChange(e, items) {
@@ -381,11 +381,11 @@ onChange(e, items) {
 }
 ```
 
-This method onChange catch up the all modification in the items changed. It is necessaring to use forEach for save the colisions change.
+The method onChange catches all modifications in the items changed. It is necessary to use forEach for save the colisions change.
 
 The two last methods from events are onRemoveItemGrid and onDeleteItemSidebar.
 
-The onRemoveItemGrid remove the item from grid and add in state of the sidebar. In the end of method is executed the loadSidebar() to re-load the drag and drop events of the jQuery
+onRemoveItemGrid removes the item from the grid and adds in state of the sidebar. In the end, the method executes loadSidebar() to re-load jQuery drag and drop events.
 
 ```javascript
 onRemoveItemGrid(e) {
@@ -410,7 +410,7 @@ onRemoveItemGrid(e) {
 }
 ```
 
-The onDeleteItemSidebar method just remove the item from sidebar.
+The onDeleteItemSidebar method just removes the item from sidebar.
 
 ```javascript
 onDeleteItemSidebar(e) {
@@ -424,8 +424,8 @@ onDeleteItemSidebar(e) {
 }
 ```
 
-This tutorial show the basic of the drag and drop with sidebar using react. Unhappy it is necessary use jQuery.
+This tutorial shows the basic of the drag and drop with sidebar using react. Unfortunately this implementation uses jQuery.
 
-I hope have to helped you.
+I hope I helped you. The book is on the table.
 
 Thanks
