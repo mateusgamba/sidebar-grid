@@ -48,7 +48,7 @@ import "gridstack/dist/gridstack-extra.css";
 import "./grid.css";
 ```
 
-ReactDOMServer must be used otherwise gridstack and jQuery will generate errors (won't compile? explain why...). We need to convert a React component to jQuery.
+ReactDOMServer must be used otherwise gridstack and jQuery will generate errors. We need to convert a React component to jQuery.
 
 In the constructor of the class let's add a pre-list of grid items and sidebar items.
 
@@ -74,9 +74,9 @@ constructor() {
 }
 ```
 
-The id is identification of item from grid and sidebar, the name is um value it will be showing. In itemsGrid variable it have x and y variables it are position on grid and width and height variables it are dimensions.
+The id is the identification of item for the grid and sidebar, the name is the value that will be displayed. In itemsGrid, x and y are coordinates on the grid and width and height its dimensions.
 
-The layout build must contain sidebar and grid and both need of the ref for use in Jquery.
+The layout build must contain the sidebar and grid and both require ref for use in Jquery.
 
 ```html
 <div className="container-fluid">
@@ -104,7 +104,7 @@ The layout build must contain sidebar and grid and both need of the ref for use 
 </div>
 ```
 
-It's necessary create a component for items of the grid and sidebar
+It's necessary to create a component for items of the grid and sidebar.
 
 ```javascript
 class ItemGrid extends Component {
@@ -136,7 +136,7 @@ class ItemGrid extends Component {
 }
 ```
 
-For finishing all layout it is necessary to create the css file.
+To finalise the layout, create the css file.
 
 ```css
 .grid-stack {
@@ -185,9 +185,9 @@ For finishing all layout it is necessary to create the css file.
 }
 ```
 
-The .removeItemGrid show the remove link when the item is on grid and .deleteItemSidebar show the delete link when item is on sidebar, both are different actions.
+The class .removeItemGrid displays the remove link when the item is on the grid and .deleteItemSidebar shows the delete link when the item is on sidebar, both are different actions.
 
-The implemantation start with componentDidMount method:
+The implementation starts with componentDidMount method:
 
 ```javascript
 componentDidMount() {
@@ -228,8 +228,8 @@ componentDidMount() {
 }
 ```
 
-The this.$gridReact and this.$sidebarReact are used to get the reference of the element DOM.
-The options variable are the grid parameters.
+this.$gridReact and this.$sidebarReact are used to get the reference from the DOM element.
+The options variable is used for the grid parameters.
 
 -   width: amount of columns;
 -   height: maximum rows amount;
@@ -238,18 +238,18 @@ The options variable are the grid parameters.
 
 For more information, access [doc](https://github.com/gridstack/gridstack.js/tree/develop/doc#options)
 
-Next line are setting up the parameters in grid.
+The next line sets up the parameters in grid.
 
-The this.loadGrid() and this.loadSidebar() call the methods to load the items.
+this.loadGrid() and this.loadSidebar() call the methods to load the items.
 
-After, it is attaches event handlers for grid, the gridstack has some events, you can access [doc](https://github.com/gridstack/gridstack.js/tree/develop/doc#events) to know all events.
+It then attaches event handlers for the grid. Gridstack has various events, you can check [doc](https://github.com/gridstack/gridstack.js/tree/develop/doc#events) to find out more about them.
 
-For this tutorial is used change and added events. The Change is used to adding/removing items or existing items change their position/size. And the added is used to add item from sidebar to grid.
+For this tutorial I used change and added events. Change is used for adding/removing items or to change the position of existing items. Added is used to add item from sidebar to grid.
 
-After, it has click event with .removeItemGrid class selector that it is only executed when clicked in a class that have .removeItemGrid class. in other words when clicked in .removeItemGrid link will be remove item from grid.
-The same occur with .deleteItemSidebar click sidebar, but it delete from sidebar.
+After, it has a click event with .removeItemGrid class selector that it is only executed when clicked in a class that have .removeItemGrid. In other words when clicked in .removeItemGrid link, it will remove item from grid.
+The same occur with .deleteItemSidebar click sidebar, but deleting from sidebar.
 
-The next componentWillUnmount method used to cleaning up of DOM elements.
+componentWillUnmount method is then used to cleaning up DOM elements.
 
 ```javascript
 componentWillUnmount() {
@@ -268,7 +268,7 @@ componentWillUnmount() {
 }
 ```
 
-For load the items on grid is used the follow code:
+For loading the items on grid I used the follow code:
 
 ```javascript
 loadGrid() {
@@ -289,11 +289,11 @@ loadGrid() {
 }
 ```
 
-The addWidget is used to create new item. The addWidget has eight parameters, you can [see](https://github.com/gridstack/gridstack.js/tree/develop/doc#addwidgetel-x-y-width-height-autoposition-minwidth-maxwidth-minheight-maxheight-id). But it will be only 6 parameters:
+addWidget is used to create a new item. The addWidget has eight parameters, you can [see](https://github.com/gridstack/gridstack.js/tree/develop/doc#addwidgetel-x-y-width-height-autoposition-minwidth-maxwidth-minheight-maxheight-id). But I will be using only 6 parameters:
 
 -   el - item html
 -   x, y, width, height - widget position/dimensions (optional)
--   autoPosition - if true then x, y parameters will be ignored and widget will be places on the first available position (optional)
+-   autoPosition - if true then x, y parameters will be ignored and widget will be placed on the first available position (optional)
 
 The parameter first I'm using ReactDOMServer.renderToStaticMarkup to receives JSX from component and returns clean and escaped html in string, because the render is make for jQuery.
 
