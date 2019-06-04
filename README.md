@@ -1,15 +1,14 @@
 # Drag drop from sidebar
 
-In one of the projects I'm working on I needed to include a drag and drop feature from a sidebar item to grid using React. Of the components found was used React-grid-layout with Toolbox example.
-After studying component and applied to the project I realised I needed extra functionality such as drag an item from the sidebar to the grid.
+I worked on a project that I had to include a drag and drop functionality from a sidebar item to a grid using React. The first  component I found was React-grid-layout with the Toolbox example but after applied to my project I realised it didn't have the functionality I was looking for.
 
-I found the gridstack.js plugin developed in Jquery and although I don’t like to mix react with Jquery I decided to use it for its resources.
+I found the gridstack.js plugin developed in jQuery and although I don’t like mixing react with jQuery I decided to use it to re-use some the drag and drop functionality I needed.
 
-In this tutorial I will explain my experience creating a drag and drop prototype where it is drag item from sidebar to grid and remove items from grid or sidebar.
+In this tutorial I will share my experience creating a prototype where an item is dragged from the sidebar to a grid and then removed from the grid or sidebar.
 
 ![](doc/drag-drop-sidebar.gif)
 
-The first step is necessary install the dependencies and set up the webpack.
+First, install the dependencies and set up webpack.
 
 Dependencies used:
 
@@ -22,13 +21,13 @@ Dependencies used:
 npm install gridstack bootstrap jquery jquery-ui
 ```
 
-After it has got unzip the webpack from react for set up jquery-ui
+Next, unzip webpack from react for set up jquery-ui
 
 ```
 npm run eject
 ```
 
-Open webpack.config.dev.js file into config folder and you go to line where you find alias and you add the follow instruct:
+Open `webpack.config.dev.js` file and find the line where you find alias and you add the follow:
 
 ```
 'jquery-ui': 'jquery-ui/ui'
@@ -36,7 +35,7 @@ Open webpack.config.dev.js file into config folder and you go to line where you 
 
 ![alias](doc/alias-config-webpack.png)
 
-Now, let's start writing the code with the importation of the dependencias:
+Now, let's start writing the code importing the dependencies:
 
 ```javascript
 import ReactDOMServer from "react-dom/server";
@@ -49,9 +48,9 @@ import "gridstack/dist/gridstack-extra.css";
 import "./grid.css";
 ```
 
-It's necessary to use ReactDOMServer because one of the problems of the gridstack is that use jquery, so we need to convert a component React to Jquery.
+ReactDOMServer must be used otherwise gridstack and jQuery will generate errors. We need to convert a React component to jQuery.
 
-In the constructor of class let's add a pre-list of grid items and sidebar items.
+In the constructor of the class let's add a pre-list of grid items and sidebar items.
 
 ```javascript
 constructor() {
@@ -75,9 +74,9 @@ constructor() {
 }
 ```
 
-The id is identification of item from grid and sidebar, the name is um value it will be showing. In itemsGrid variable it have x and y variables it are position on grid and width and height variables it are dimensions.
+The id is the identification of item for the grid and sidebar, the name is the value that will be displayed. In itemsGrid, x and y are coordinates on the grid and width and height its dimensions.
 
-The layout build must contain sidebar and grid and both need of the ref for use in Jquery.
+The layout build must contain the sidebar and grid and both require ref for use in Jquery.
 
 ```html
 <div className="container-fluid">
@@ -105,7 +104,7 @@ The layout build must contain sidebar and grid and both need of the ref for use 
 </div>
 ```
 
-It's necessary create a component for items of the grid and sidebar
+It's necessary to create a component for items of the grid and sidebar.
 
 ```javascript
 class ItemGrid extends Component {
@@ -137,7 +136,7 @@ class ItemGrid extends Component {
 }
 ```
 
-For finishing all layout it is necessary to create the css file.
+To finalise the layout, create the css file.
 
 ```css
 .grid-stack {
@@ -186,9 +185,9 @@ For finishing all layout it is necessary to create the css file.
 }
 ```
 
-The .removeItemGrid show the remove link when the item is on grid and .deleteItemSidebar show the delete link when item is on sidebar, both are different actions.
+The class .removeItemGrid displays the remove link when the item is on the grid and .deleteItemSidebar shows the delete link when the item is on sidebar, both are different actions.
 
-The implemantation start with componentDidMount method:
+The implementation starts with componentDidMount method:
 
 ```javascript
 componentDidMount() {
@@ -229,28 +228,28 @@ componentDidMount() {
 }
 ```
 
-The this.$gridReact and this.$sidebarReact are used to get the reference of the element DOM.
-The options variable are the grid parameters.
+this.$gridReact and this.$sidebarReact are used to get the reference from the DOM element.
+Variable is used for the grid parameters.
 
--   width: amount of columns;
--   height: maximum rows amount;
--   acceptWidgets" accept widgets dragged from other grids or from outside;
+-   width: number of columns;
+-   height: maximum number of rows;
+-   acceptWidgets: accept widgets dragged from other grids or from outside;
 -   float: enable floating widgets;
 
-For more information, access [doc](https://github.com/gridstack/gridstack.js/tree/develop/doc#options)
+For more information [doc](https://github.com/gridstack/gridstack.js/tree/develop/doc#options)
 
-Next line are setting up the parameters in grid.
+The next line sets up the parameters on the grid.
 
-The this.loadGrid() and this.loadSidebar() call the methods to load the items.
+this.loadGrid() and this.loadSidebar() call the methods to load the items.
 
-After, it is attaches event handlers for grid, the gridstack has some events, you can access [doc](https://github.com/gridstack/gridstack.js/tree/develop/doc#events) to know all events.
+It attaches event handlers for the grid. Gridstack has various events, you can check [doc](https://github.com/gridstack/gridstack.js/tree/develop/doc#events) to find out more about them.
 
-For this tutorial is used change and added events. The Change is used to adding/removing items or existing items change their position/size. And the added is used to add item from sidebar to grid.
+For this tutorial I used change and added events. Change is used for adding/removing items or to change the position of existing items. Added is used to add item from sidebar to grid.
 
-After, it has click event with .removeItemGrid class selector that it is only executed when clicked in a class that have .removeItemGrid class. in other words when clicked in .removeItemGrid link will be remove item from grid.
-The same occur with .deleteItemSidebar click sidebar, but it delete from sidebar.
+After, it has a click event with .removeItemGrid class selector that it is only executed when clicked in a class that have .removeItemGrid. In other words when clicked in .removeItemGrid link, it will remove item from grid.
+The same occur with .deleteItemSidebar click sidebar, but deleting from sidebar.
 
-The next componentWillUnmount method used to cleaning up of DOM elements.
+componentWillUnmount method is then used to cleaning up DOM elements.
 
 ```javascript
 componentWillUnmount() {
@@ -269,7 +268,7 @@ componentWillUnmount() {
 }
 ```
 
-For load the items on grid is used the follow code:
+For loading the items on grid I used the follow code:
 
 ```javascript
 loadGrid() {
@@ -290,15 +289,15 @@ loadGrid() {
 }
 ```
 
-The addWidget is used to create new item. The addWidget has eight parameters, you can [see](https://github.com/gridstack/gridstack.js/tree/develop/doc#addwidgetel-x-y-width-height-autoposition-minwidth-maxwidth-minheight-maxheight-id). But it will be only 6 parameters:
+addWidget is used to create a new item. The addWidget has eight parameters, you can [see](https://github.com/gridstack/gridstack.js/tree/develop/doc#addwidgetel-x-y-width-height-autoposition-minwidth-maxwidth-minheight-maxheight-id). But I will be using only 6 parameters:
 
 -   el - item html
 -   x, y, width, height - widget position/dimensions (optional)
--   autoPosition - if true then x, y parameters will be ignored and widget will be places on the first available position (optional)
+-   autoPosition - if true then x, y parameters will be ignored and widget will be placed on the first available position (optional)
 
-The parameter first I'm using ReactDOMServer.renderToStaticMarkup to receives JSX from component and returns clean and escaped html in string, because the render is make for jQuery.
+The first parameter I'm using is ReactDOMServer.renderToStaticMarkup to receive JSX from component and return clean and escaped html in string, because the render is made for jQuery.
 
-for load the items in sidebar, it is used the method:
+for loading items in sidebar, the following method is used:
 
 ```javascript
 loadSidebar() {
@@ -318,7 +317,7 @@ loadSidebar() {
 }
 ```
 
-That method just data load from state to jQuery function and it is used the same process of render (ReactDOMServer.renderToStaticMarkup). After, it is delete all item and added again. It is call the method this.dragSidebar that enable draggable functionality from sidebar to grid.
+The method loads the data from state to jQuery function and it is used the same process of render (ReactDOMServer.renderToStaticMarkup). After, all items are deleted and added again. It is called the method this.dragSidebar that enables draggable functionality from sidebar to grid.
 
 The this.draggable has follow code:
 
@@ -333,14 +332,14 @@ dragSidebar() {
 }
 ```
 
-The dragSidebar method has functanality of sidebar drag and drop. it is used this.\$sidebarReact.children() because it is necessary all items from sidebar has the drag and drop. The parameters are used to:
+The dragSidebar method has the sidebar drag and drop functionality. It is used this.\$sidebarReact.children() because it is required on all items from the sidebar which can be dragged and dropped. The parameters used are:
 
 -   revert: for item return to sidebar if the item has not been dropped on a droppable.
--   handle: specific the element for the dragging
+-   handle: specific element for dragging.
 -   scroll: container auto-scrolls while dragging.
 -   appendTo: where the draggable helper should be appended to while dragging.
 
-Now, It will be implemented the events
+Now, the events will be implemented.
 
 ```javascript
 onAddGridFromSidebar(e, items) {
@@ -358,7 +357,7 @@ onAddGridFromSidebar(e, items) {
 }
 ```
 
-The onAddGridFromSidebar method remove the item from sidebar, itemsSidebar state, and add in the itemsGrid state.
+The method onAddGridFromSidebar removes the item from sidebar, itemsSidebar state, and add in the itemsGrid state.
 
 ```javascript
 onChange(e, items) {
@@ -382,11 +381,11 @@ onChange(e, items) {
 }
 ```
 
-This method onChange catch up the all modification in the items changed. It is necessaring to use forEach for save the colisions change.
+The method onChange catches all modifications in the items changed. It is necessary to use forEach for save the colisions change.
 
 The two last methods from events are onRemoveItemGrid and onDeleteItemSidebar.
 
-The onRemoveItemGrid remove the item from grid and add in state of the sidebar. In the end of method is executed the loadSidebar() to re-load the drag and drop events of the jQuery
+onRemoveItemGrid removes the item from the grid and adds in state of the sidebar. In the end, the method executes loadSidebar() to re-load jQuery drag and drop events.
 
 ```javascript
 onRemoveItemGrid(e) {
@@ -411,7 +410,7 @@ onRemoveItemGrid(e) {
 }
 ```
 
-The onDeleteItemSidebar method just remove the item from sidebar.
+The onDeleteItemSidebar method just removes the item from sidebar.
 
 ```javascript
 onDeleteItemSidebar(e) {
@@ -425,8 +424,8 @@ onDeleteItemSidebar(e) {
 }
 ```
 
-This tutorial show the basic of the drag and drop with sidebar using react. Unhappy it is necessary use jQuery.
+This tutorial shows the basic of the drag and drop with sidebar using react. Unfortunately this implementation uses jQuery.
 
-I hope have to helped you.
+I hope I helped you. The book is on the table.
 
 Thanks
